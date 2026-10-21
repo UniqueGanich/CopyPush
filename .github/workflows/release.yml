@@ -51,7 +51,9 @@ jobs:
         with:
           tag_name: ${{ steps.ver.outputs.tag }}
           name: CopyPush ${{ steps.ver.outputs.version }}
-          draft: false
+          # Черновик: релиз не публикуется автоматически.
+          # Снимите галочку в GitHub → Settings → Releases, когда будете готовы.
+          draft: true
           prerelease: ${{ contains(github.ref_name, '-') }}
           body_path: RELEASE_NOTES.md
           files: |
