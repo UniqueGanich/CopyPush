@@ -1,12 +1,12 @@
 @echo off
 setlocal
 rem ============================================================
-rem  CopyPush - удаление
-rem  Запустите этот файл, если хотите убрать утилиту из системы.
+rem  CopyPush - uninstaller
+rem  Run this file to remove CopyPush from the system.
 rem ============================================================
 
 echo.
-echo  Удаление CopyPush...
+echo  Removing CopyPush...
 echo.
 
 taskkill /IM CopyPush.exe /F >nul 2>&1
@@ -16,13 +16,13 @@ reg delete "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupAppro
 reg delete "HKCU\Software\CopyPush" /f >nul 2>&1
 reg delete "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\CopyPush" /f >nul 2>&1
 
-rem удаляем папку с логом
+rem remove the log folder
 if exist "%LOCALAPPDATA%\CopyPush" rmdir /s /q "%LOCALAPPDATA%\CopyPush"
 
-rem удаляем эту папку (вместе с самим скриптом)
+rem remove this folder together with the script itself
 cd /d "%TEMP%"
 rmdir /s /q "%~dp0"
 
-echo  Готово. CopyPush удален.
+echo  Done. CopyPush has been removed.
 timeout /t 3 >nul
 endlocal
