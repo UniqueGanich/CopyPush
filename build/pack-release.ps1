@@ -1,5 +1,5 @@
 ﻿# Упаковка релизных артефактов. Используется и локально, и в CI (.github/workflows/release.yml).
-#   powershell -ExecutionPolicy Bypass -File tools\pack-release.ps1 -Version 1.0.0
+#   powershell -ExecutionPolicy Bypass -File build\pack-release.ps1 -Version 1.0.0
 param(
     [string]$Version = '1.0.0',
     [string]$ProjectDir = (Split-Path -Parent $PSScriptRoot)
@@ -12,7 +12,7 @@ $env:Path = [Environment]::GetEnvironmentVariable('Path','Machine') + ';' + [Env
 
 $Dist   = Join-Path $ProjectDir 'dist'
 $Out    = Join-Path $ProjectDir 'release'
-$Proj   = Join-Path $ProjectDir 'CopyPush.csproj'
+$Proj   = Join-Path $ProjectDir 'src\CopyPush\CopyPush.csproj'
 
 Write-Host "=== Сборка self-contained ===" -ForegroundColor Cyan
 Remove-Item (Join-Path $Dist 'self-contained') -Recurse -Force -ErrorAction SilentlyContinue
@@ -35,7 +35,7 @@ function Pack([string]$srcDir, [string]$name) {
     $stage = Join-Path $Out $name
     New-Item -ItemType Directory -Force -Path $stage | Out-Null
     Copy-Item (Join-Path $srcDir 'CopyPush.exe') $stage
-    Copy-Item (Join-Path $ProjectDir 'tools\Uninstall.cmd') $stage
+    Copy-Item (Join-Path $ProjectDir 'build\Uninstall.cmd') $stage
     Copy-Item (Join-Path $ProjectDir 'README.md') $stage
     Copy-Item (Join-Path $ProjectDir 'LICENSE') $stage
     Compress-Archive -Path (Join-Path $stage '*') -DestinationPath (Join-Path $Out "$name.zip") -CompressionLevel Optimal

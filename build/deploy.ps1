@@ -1,19 +1,24 @@
 ﻿# Сборка и развёртывание CopyPush
-# Использование:  powershell -ExecutionPolicy Bypass -File D:\Projects\CopyPush\deploy.ps1
+# Использование:  powershell -ExecutionPolicy Bypass -File build\deploy.ps1
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $ErrorActionPreference = 'Stop'
 
-$ProjectDir = $PSScriptRoot
+$ProjectDir = Split-Path -Parent $PSScriptRoot
 $PublishDir = Join-Path $ProjectDir 'publish'
 $InstallDir = Join-Path $env:LOCALAPPDATA 'Programs\CopyPush'
 $UninstallKey = 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\CopyPush'
+
+# Имя в «Параметры → Приложения» - на языке системы пользователя
+$uiLang = (Get-Culture).TwoLetterISOLanguageName
+$displayName = if ($uiLang -eq 'ru') { 'CopyPush — уведомление о копировании' }
+                else { 'CopyPush — copy notification' }
 
 Write-Host "=== 1. Сборка ===" -ForegroundColor Cyan
 $env:DOTNET_CLI_TELEMETRY_OPTOUT = '1'
 $env:Path = [Environment]::GetEnvironmentVariable('Path','Machine') + ';' + [Environment]::GetEnvironmentVariable('Path','User')
 
-dotnet publish (Join-Path $ProjectDir 'CopyPush.csproj') `
+dotnet publish (Join-Path $ProjectDir 'src\CopyPush\CopyPush.csproj') `
     -c Release -r win-x64 --self-contained false -o $PublishDir -v quiet
 if ($LASTEXITCODE -ne 0) { throw "Сборка не удалась" }
 
@@ -27,11 +32,11 @@ Copy-Item (Join-Path $PublishDir 'CopyPush.exe') -Destination $InstallDir -Force
 
 Write-Host "=== 4. Скрипт удаления ===" -ForegroundColor Cyan
 $uninstallPath = Join-Path $InstallDir 'Uninstall.cmd'
-Copy-Item (Join-Path $ProjectDir 'tools\Uninstall.cmd') -Destination $uninstallPath -Force
+Copy-Item (Join-Path $ProjectDir 'build\Uninstall.cmd') -Destination $uninstallPath -Force
 
 Write-Host "=== 5. Запись в «Программы и компоненты» ===" -ForegroundColor Cyan
 New-Item -Path $UninstallKey -Force | Out-Null
-Set-ItemProperty $UninstallKey -Name 'DisplayName'     -Value 'CopyPush — уведомление о копировании'
+Set-ItemProperty $UninstallKey -Name 'DisplayName'     -Value $displayName
 Set-ItemProperty $UninstallKey -Name 'DisplayVersion'  -Value '1.0.0'
 Set-ItemProperty $UninstallKey -Name 'Publisher'       -Value 'CopyPush'
 Set-ItemProperty $UninstallKey -Name 'DisplayIcon'     -Value "$InstallDir\CopyPush.exe"

@@ -1,12 +1,12 @@
 ﻿# Генератор иконки CopyPush (.ico) + .png для README.
-# Запуск:  powershell -ExecutionPolicy Bypass -File D:\Projects\CopyPush\tools\make-icon.ps1
+# Запуск:  powershell -ExecutionPolicy Bypass -File build\make-icon.ps1
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Drawing
 
-$OutDir   = Split-Path -Parent $PSScriptRoot
-$AssetsDir = Join-Path $OutDir 'assets'
-$ResDir   = Join-Path $OutDir 'Resources'
+$Root      = Split-Path -Parent $PSScriptRoot
+$AssetsDir = Join-Path $Root 'docs\images'
+$ResDir    = Join-Path $Root 'src\CopyPush\Resources'
 New-Item -ItemType Directory -Force -Path $AssetsDir, $ResDir | Out-Null
 
 # Акцент Windows 11 по умолчанию (используется, если система другая - см. README)

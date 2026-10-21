@@ -19,6 +19,12 @@ internal sealed class SettingsService
     public ToastStyle Style { get; set; } = ToastStyle.System;
     public ToastDuration Duration { get; set; } = ToastDuration.Normal;
 
+    /// <summary>
+    /// Язык интерфейса. Пустая строка - определять автоматически по системе
+    /// (Loc.Auto). Иначе код языка: ru, en, uk, de, fr, es.
+    /// </summary>
+    public string Language { get; set; } = Loc.Auto;
+
     /// <summary>Запускать вместе с Windows.</summary>
     public bool RunAtStartup { get; set; } = true;
 
@@ -39,6 +45,7 @@ internal sealed class SettingsService
             Position = (ToastPosition)ReadInt(key, "Position", (int)Position);
             Style = (ToastStyle)ReadInt(key, "Style", (int)Style);
             Duration = (ToastDuration)ReadInt(key, "Duration", (int)Duration);
+            Language = ReadString(key, "Language", Language);
             RunAtStartup = ReadBool(key, "RunAtStartup", RunAtStartup);
         }
         catch
@@ -59,6 +66,7 @@ internal sealed class SettingsService
             key.SetValue("Position", (int)Position, RegistryValueKind.DWord);
             key.SetValue("Style", (int)Style, RegistryValueKind.DWord);
             key.SetValue("Duration", (int)Duration, RegistryValueKind.DWord);
+            key.SetValue("Language", Language ?? Loc.Auto, RegistryValueKind.String);
             key.SetValue("RunAtStartup", RunAtStartup ? 1 : 0, RegistryValueKind.DWord);
         }
         catch
@@ -126,5 +134,11 @@ internal sealed class SettingsService
     {
         var v = key.GetValue(name);
         return v is int i ? i : fallback;
+    }
+
+    private static string ReadString(RegistryKey key, string name, string fallback)
+    {
+        var v = key.GetValue(name) as string;
+        return string.IsNullOrEmpty(v) ? fallback : v;
     }
 }

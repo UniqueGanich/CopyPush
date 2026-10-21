@@ -10,9 +10,18 @@ namespace CopyPush.Services;
 /// </summary>
 internal sealed class ToastService
 {
+    /// <summary>
+    /// Минимальный интервал между плашками. Некоторые приложения при копировании
+    /// присылают несколько WM_CLIPBOARDUPDATE подряд, а режим "реагировать на любое
+    /// изменение буфера" добавляет ещё. Без этого ограничения на экране появлялась бы
+    /// груда одинаковых плашек.
+    /// </summary>
+    private const int DebounceMs = 350;
+
     private readonly ThemeService _theme;
     private readonly SettingsService _settings;
     private readonly List<ToastWindow> _active = new();
+    private DateTime _lastShownUtc = DateTime.MinValue;
 
     public ToastService(ThemeService theme, SettingsService settings)
     {
@@ -24,6 +33,14 @@ internal sealed class ToastService
     {
         try
         {
+            var now = DateTime.UtcNow;
+            if ((now - _lastShownUtc).TotalMilliseconds < DebounceMs)
+            {
+                return;
+            }
+
+            _lastShownUtc = now;
+
             var window = new ToastWindow(_theme, _settings.Style, _settings.Duration);
             int index = _active.Count;
 

@@ -36,7 +36,7 @@ internal sealed class KeyboardHook : IDisposable
         if (_hook == IntPtr.Zero)
         {
             throw new InvalidOperationException(
-                $"SetWindowsHookEx(WH_KEYBOARD_LL) не удался, Win32={Marshal.GetLastWin32Error()}");
+                $"SetWindowsHookEx(WH_KEYBOARD_LL) failed, Win32={Marshal.GetLastWin32Error()}");
         }
     }
 

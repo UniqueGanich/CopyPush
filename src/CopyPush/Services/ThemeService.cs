@@ -6,18 +6,6 @@ using Color = System.Windows.Media.Color;
 
 namespace CopyPush.Services;
 
-internal enum ToastStyle
-{
-    /// <summary>Системный цвет окна + контрастный текст (по умолчанию).</summary>
-    System = 0,
-
-    /// <summary>Заливка акцентным цветом Windows + белый текст.</summary>
-    Accent = 1,
-
-    /// <summary>Системный цвет окна + акцентная рамка и акцентный текст.</summary>
-    Contrast = 2,
-}
-
 /// <summary>
 /// Определяет цвета плашки в соответствии с темой Windows.
 ///

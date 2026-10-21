@@ -25,18 +25,20 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Восстановление пакетов
-        run: dotnet restore
+        run: dotnet restore src/CopyPush/CopyPush.csproj
 
       - name: Сборка
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build src/CopyPush/CopyPush.csproj --configuration Release --no-restore
 
       - name: Проверка публикации
         run: >
-          dotnet publish --configuration Release -r win-x64 --self-contained false
+          dotnet publish src/CopyPush/CopyPush.csproj --configuration Release -r win-x64 --self-contained false
           -p:PublishSingleFile=true --output out
 
+      - name: Проверка таблицы локализации
+        run: powershell -ExecutionPolicy Bypass -File build/verify-locales.ps1
       - name: Иконка
-        run: powershell -ExecutionPolicy Bypass -File tools/make-icon.ps1
+        run: powershell -ExecutionPolicy Bypass -File build/make-icon.ps1
 
       - name: Артефакт сборки
         uses: actions/upload-artifact@v4

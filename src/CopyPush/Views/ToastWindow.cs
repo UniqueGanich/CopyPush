@@ -71,7 +71,7 @@ internal sealed class ToastWindow : Window
 
         _label = new TextBlock
         {
-            Text = Loc.Copied,
+            Text = Loc.Get("toast.copied"),
             Margin = new Thickness(8, 0, 0, 0),
             FontFamily = new FontFamily("Segoe UI Variable Text, Segoe UI, Tahoma"),
             FontSize = 13,

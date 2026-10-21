@@ -54,10 +54,13 @@ internal sealed class AppContext : IDisposable
         _settings.Load();
         _settings.Save();   // фиксируем дефолты, чтобы их было видно в трее
 
+        // Язык интерфейса: по умолчанию язык системы, можно зафиксировать вручную.
+        Loc.Apply(_settings.Language);
+
         _theme = new ThemeService();
         _theme.Changed += () => _settings.NotifyChanged();
 
-        Logger.Info($"CopyPush starting. Theme={(_theme.IsDark ? "dark" : "light")}, accent={_theme.Accent}, style={_settings.Style}, position={_settings.Position}, duration={_settings.Duration}");
+        Logger.Info($"CopyPush starting. Theme={(_theme.IsDark ? "dark" : "light")}, accent={_theme.Accent}, style={_settings.Style}, position={_settings.Position}, duration={_settings.Duration}, language={Loc.Language}");
 
         _toastService = new ToastService(_theme, _settings);
 

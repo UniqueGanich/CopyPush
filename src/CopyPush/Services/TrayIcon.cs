@@ -114,7 +114,7 @@ internal sealed class TrayIcon : IDisposable
     {
         var menu = new ContextMenuStrip();
 
-        var enabled = new ToolStripMenuItem(Loc.Notifications)
+        var enabled = new ToolStripMenuItem(Loc.Get("menu.notifications"))
         {
             Checked = _settings.Enabled,
             CheckOnClick = false,
@@ -127,7 +127,7 @@ internal sealed class TrayIcon : IDisposable
         };
         menu.Items.Add(enabled);
 
-        var anyChange = new ToolStripMenuItem(Loc.AnyClipboardChange)
+        var anyChange = new ToolStripMenuItem(Loc.Get("menu.anyClipboardChange"))
         {
             Checked = _settings.ShowOnAnyClipboardChange,
         };
@@ -141,27 +141,35 @@ internal sealed class TrayIcon : IDisposable
 
         menu.Items.Add(new ToolStripSeparator());
 
-        var position = new ToolStripMenuItem(Loc.Position);
-        position.DropDownItems.Add(Radio(Loc.AtCursor, ToastPosition.AtCursor));
-        position.DropDownItems.Add(Radio(Loc.ScreenCenter, ToastPosition.ScreenCenter));
-        position.DropDownItems.Add(Radio(Loc.BottomRight, ToastPosition.BottomRight));
+        var position = new ToolStripMenuItem(Loc.Get("menu.position"));
+        position.DropDownItems.Add(Radio(Loc.Get("menu.position.cursor"), ToastPosition.AtCursor));
+        position.DropDownItems.Add(Radio(Loc.Get("menu.position.center"), ToastPosition.ScreenCenter));
+        position.DropDownItems.Add(Radio(Loc.Get("menu.position.bottomRight"), ToastPosition.BottomRight));
         menu.Items.Add(position);
 
-        var style = new ToolStripMenuItem(Loc.Style);
-        style.DropDownItems.Add(Radio(Loc.StyleSystem, ToastStyle.System));
-        style.DropDownItems.Add(Radio(Loc.StyleAccent, ToastStyle.Accent));
-        style.DropDownItems.Add(Radio(Loc.StyleContrast, ToastStyle.Contrast));
+        var style = new ToolStripMenuItem(Loc.Get("menu.style"));
+        style.DropDownItems.Add(Radio(Loc.Get("menu.style.system"), ToastStyle.System));
+        style.DropDownItems.Add(Radio(Loc.Get("menu.style.accent"), ToastStyle.Accent));
+        style.DropDownItems.Add(Radio(Loc.Get("menu.style.contrast"), ToastStyle.Contrast));
         menu.Items.Add(style);
 
-        var duration = new ToolStripMenuItem(Loc.Duration);
-        duration.DropDownItems.Add(Radio(Loc.Fast, ToastDuration.Fast));
-        duration.DropDownItems.Add(Radio(Loc.Normal, ToastDuration.Normal));
-        duration.DropDownItems.Add(Radio(Loc.Slow, ToastDuration.Slow));
+        var duration = new ToolStripMenuItem(Loc.Get("menu.duration"));
+        duration.DropDownItems.Add(Radio(Loc.Get("menu.duration.fast"), ToastDuration.Fast));
+        duration.DropDownItems.Add(Radio(Loc.Get("menu.duration.normal"), ToastDuration.Normal));
+        duration.DropDownItems.Add(Radio(Loc.Get("menu.duration.slow"), ToastDuration.Slow));
         menu.Items.Add(duration);
+
+        var language = new ToolStripMenuItem(Loc.Get("menu.language"));
+        language.DropDownItems.Add(LanguageItem(Loc.Get("menu.language.auto"), Loc.Auto));
+        foreach (var code in Loc.Supported)
+        {
+            language.DropDownItems.Add(LanguageItem(Loc.LanguageName(code), code));
+        }
+        menu.Items.Add(language);
 
         menu.Items.Add(new ToolStripSeparator());
 
-        var startup = new ToolStripMenuItem(Loc.RunAtStartup)
+        var startup = new ToolStripMenuItem(Loc.Get("menu.startup"))
         {
             Checked = _settings.RunAtStartup,
         };
@@ -176,15 +184,36 @@ internal sealed class TrayIcon : IDisposable
 
         menu.Items.Add(new ToolStripSeparator());
 
-        var test = new ToolStripMenuItem(Loc.ShowTest);
+        var test = new ToolStripMenuItem(Loc.Get("menu.showTest"));
         test.Click += (_, _) => _onTest();
         menu.Items.Add(test);
 
-        var exit = new ToolStripMenuItem(Loc.Exit);
+        var exit = new ToolStripMenuItem(Loc.Get("menu.exit"));
         exit.Click += (_, _) => _onExit();
         menu.Items.Add(exit);
 
         return menu;
+    }
+
+    /// <summary>Пункт меню выбора языка.</summary>
+    private ToolStripMenuItem LanguageItem(string text, string code)
+    {
+        var item = new ToolStripMenuItem(text)
+        {
+            Checked = string.Equals(_settings.Language, code, StringComparison.Ordinal),
+        };
+
+        item.Click += (_, _) =>
+        {
+            _settings.Language = code;
+            _settings.Save();
+
+            // Пересобираем меню на новом языке.
+            Loc.Apply(code);
+            RefreshCheckStates();
+        };
+
+        return item;
     }
 
     private ToolStripMenuItem Radio(string text, object value)

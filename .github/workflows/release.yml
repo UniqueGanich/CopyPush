@@ -37,13 +37,13 @@ jobs:
           "tag=$tag" >> $env:GITHUB_OUTPUT
 
       - name: Иконка
-        run: powershell -ExecutionPolicy Bypass -File tools/make-icon.ps1
+        run: powershell -ExecutionPolicy Bypass -File build/make-icon.ps1
 
       - name: Сборка и упаковка архивов
         shell: pwsh
         run: |
           $v = "${{ steps.ver.outputs.version }}"
-          ./tools/pack-release.ps1 -Version $v
+          ./build/pack-release.ps1 -Version $v
           Get-ChildItem release -Filter *.zip | ForEach-Object { "{0}  {1:N1} МБ" -f $_.Name, ($_.Length/1MB) }
 
       - name: Опубликовать релиз
@@ -55,7 +55,7 @@ jobs:
           # Снимите галочку в GitHub → Settings → Releases, когда будете готовы.
           draft: true
           prerelease: ${{ contains(github.ref_name, '-') }}
-          body_path: RELEASE_NOTES.md
+          body_path: docs/RELEASE_NOTES.md
           files: |
             release/*.zip
 

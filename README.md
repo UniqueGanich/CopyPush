@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/icon-256.png" alt="CopyPush" width="96" height="96">
+<img src="docs/images/icon-256.png" alt="CopyPush" width="96" height="96">
 
 # CopyPush
 
@@ -10,6 +10,7 @@
 [![Release](https://img.shields.io/github/v/release/UniqueGanich/CopyPush?label=Release&color=blue)](https://github.com/UniqueGanich/CopyPush/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4?logo=windows)](https://microsoft.com/windows)
+[![Languages](https://img.shields.io/badge/languages-ru%20%7C%20en%20%7C%20uk%20%7C%20de%20%7C%20fr%20%7C%20es-0078D4)](src/CopyPush/Services/Loc.cs)
 
 [English](README.en.md)
 
@@ -17,7 +18,7 @@
 
 ---
 
-![Скриншот](assets/screenshot.png)
+![Скриншот](docs/images/hero.png)
 
 ## Зачем
 
@@ -28,27 +29,30 @@
 ## Что умеет
 
 - **Глобальная привязка `Ctrl+C`** — работает в любом приложении, а не только в вашем.
-- **Ничего не ломает.** `Ctrl+C` не перехватывается: используется хук *на чтение*,
-  поэтому в консоли он по-прежнему прерывает процесс, а в играх работает как игровая клавиша.
+- **Ничего не ломает.** `Ctrl+C` не перехватывается: используется хук *на чтение*.
+  В консоли он по-прежнему прерывает процесс, в играх работает как игровая клавиша.
 - **Без ложных срабатываний.** Плашка появляется, только если содержимое буфера
   действительно изменилось после нажатия.
+- **Язык подстраивается сам.** Интерфейс и надпись «Скопировано» берут язык системы
+  (русский / english / українська / deutsch / français / español). Язык можно
+  зафиксировать вручную в меню в трее.
 - **Цвет системной темы.** Фон — как у системных окон, текст контрастный.
-  Акцентный цвет берётся из темы Windows и подхватывается на лету, без перезапуска.
+  Акцентный цвет берётся из темы Windows и подхватывается на лету.
 - **Не мешает.** Окно не перехватывает клики, не активируется и не появляется в `Alt+Tab`.
-- **Журнал** `%LOCALAPPDATA%\CopyPush\CopyPush.log` — если что-то пойдёт не так, видно почему.
+- **Пишет журнал** в `%LOCALAPPDATA%\CopyPush\CopyPush.log` — удобно, если что-то пойдёт не так.
 
 ## Установка
 
-1. Скачайте архив со страницы [Releases](https://github.com/UniqueGanich/CopyPush/releases).
-2. Распакуйте в любую папку (например `C:\Tools\CopyPush`).
-3. Запустите `CopyPush.exe` — появится иконка в трее.
+Готовые сборки лежат в [Releases](https://github.com/UniqueGanich/CopyPush/releases):
 
-Готово. Теперь `Ctrl+C` в любом приложении покажет плашку «Скопировано».
-
-| Архив | Размер | Требования |
+| Что скачать | Размер | Требования |
 |---|---|---|
-| `CopyPush-x.y.z-win-x64.zip` | ~35 МБ | ничего, работает сразу |
-| `CopyPush-x.y.z-win-x64-small.zip` | ~10 МБ | [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) |
+| [**CopyPush-1.0.0-win-x64.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0.0-win-x64.zip) | ~63 МБ | ничего, работает сразу на Windows 10/11 |
+| [**CopyPush-1.0.0-win-x64-small.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0.0-win-x64-small.zip) | ~6 МБ | [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) |
+
+1. Скачайте архив и распакуйте в любую папку (например `C:\Tools\CopyPush`).
+2. Запустите `CopyPush.exe` — появится иконка в трее.
+3. Готово: `Ctrl+C` в любом приложении покажет плашку «Скопировано».
 
 Автозапуск по умолчанию **выключен** — включается в меню иконки в трее
 («Запускать вместе с Windows»).
@@ -69,13 +73,21 @@
 | Позиция | у курсора / по центру экрана / в правом нижнем углу |
 | Оформление | системный / акцентный / контрастный |
 | Длительность | быстро / обычно / медленно |
+| **Язык** | автоматически (системный) / русский / english / українська / deutsch / français / español |
 | Запускать вместе с Windows | вкл / выкл |
 
-Три варианта оформления:
+### Три варианта оформления
 
 | Системный | Акцентный | Контрастный |
-|---|---|---|
-| ![](assets/toast.png) | ![](assets/icon-256.png) | |
+|:---:|:---:|:---:|
+| ![](docs/images/style-system.png) | ![](docs/images/style-accent.png) | ![](docs/images/style-contrast.png) |
+
+### Язык
+
+По умолчанию язык берётся из системы: `Windows → Параметры → Время и язык → Язык и регион →
+Предпочтительные языки`. Если там первым стоит русский — интерфейс и надпись будут русскими,
+если английский — английскими. Любой из шести поддерживаемых языков можно зафиксировать
+вручную: меню иконки в трее → **Язык**. После смены языка Windows достаточно перезапустить CopyPush.
 
 ## Как это работает
 
@@ -105,6 +117,7 @@ Ctrl+C  ──►  WH_KEYBOARD_LL (наблюдение, ничего не по�
 - **Анимация** — `Storyboard` над `RenderTransform` (подъём на 48 px) и `Opacity`.
 - **Тема** — `AppsUseLightTheme` + акцент из `Explorer\Accent\AccentPalette`
   и WinRT `UISettings`; цвета перечитываются при смене темы.
+- **Язык** — `CultureInfo.CurrentUICulture` (язык системы) либо зафиксированный в настройках.
 
 ## Требования
 
@@ -121,27 +134,38 @@ git clone https://github.com/UniqueGanich/CopyPush.git
 cd CopyPush
 
 # один .exe со всем внутри (не требует .NET на компьютере)
-dotnet publish -c Release -r win-x64 --self-contained true \
+dotnet publish src/CopyPush/CopyPush.csproj -c Release -r win-x64 --self-contained true \
   -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true \
   -p:EnableCompressionInSingleFile=true -o out
 ```
 
-Полный цикл (сборка + установка + запуск) — `tools\deploy.ps1`.
-Иконка генерируется скриптом `tools\make-icon.ps1`, скриншоты — `tools\make-screenshots.ps1`.
+Скрипты в `build/`:
+
+| Скрипт | Что делает |
+|---|---|
+| `build\deploy.ps1` | сборка + установка + запуск |
+| `build\pack-release.ps1` | сборка + упаковка релизных архивов |
+| `build\make-icon.ps1` | генерация иконки приложения |
+| `build\make-screenshots.ps1` | скриншоты для README |
+| `build\verify-locales.ps1` | проверка целостности таблицы переводов |
+| `build\Uninstall.cmd` | деинсталлятор |
 
 ## Структура проекта
 
 ```
 CopyPush/
-├── Program.cs              точка входа, сборка всех компонентов
-├── Interop/                P/Invoke: хук, буфер, окно, курсор, DPI
-├── Hooks/                  KeyboardHook (WH_KEYBOARD_LL), MessageWindow
-├── Services/               CopyDetector, ThemeService, ToastService, SettingsService, TrayIcon
-├── Views/ToastWindow.cs    плашка (интерфейс строится в коде, без XAML)
-├── Resources/              иконка приложения
-├── assets/                 скриншоты и иконки для README
-├── tools/                  deploy.ps1, make-icon.ps1, make-screenshots.ps1, Uninstall.cmd
-└── .github/workflows/      CI (сборка) и Release (публикация по тегу)
+├── src/CopyPush/            исходники приложения
+│   ├── Program.cs           точка входа, сборка всех компонентов
+│   ├── Interop/             P/Invoke: хук, буфер, окно, курсор, DPI
+│   ├── Hooks/               KeyboardHook (WH_KEYBOARD_LL), MessageWindow
+│   ├── Services/            CopyDetector, ThemeService, ToastService, SettingsService,
+│   │                        TrayIcon, Loc (локализация), Logger
+│   ├── Views/ToastWindow.cs плашка (интерфейс строится в коде, без XAML)
+│   └── Resources/           иконка приложения
+├── build/                   скрипты сборки, упаковки и деинсталлятор
+├── docs/                    заметки релиза и изображения для README
+├── .github/workflows/       CI (сборка) и Release (публикация по тегу)
+└── global.json              фиксация версии .NET SDK (8.0.x)
 ```
 
 ## Лицензия
