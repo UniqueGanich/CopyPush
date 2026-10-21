@@ -1,0 +1,21 @@
+## Сборка
+bin/
+obj/
+publish/
+publish-sc/
+artifacts/
+dist/
+release/
+*.user
+*.suo
+.vs/
+
+## Локальное
+*.log
+Thumbs.db
+desktop.ini
+.DS_Store
+
+## Секреты
+*.pfx
+*.p12

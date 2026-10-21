@@ -1,0 +1,54 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+
+    <AssemblyName>CopyPush</AssemblyName>
+    <RootNamespace>CopyPush</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Resources\CopyPush.ico</ApplicationIcon>
+    <NeutralLanguage>ru-RU</NeutralLanguage>
+
+    <!-- Метаданные для страницы свойств файла и релиза -->
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Product>CopyPush</Product>
+    <Title>CopyPush — уведомление о копировании</Title>
+    <Description>Системная привязка Ctrl+C: всплывающая плашка «Скопировано» у курсора мыши.</Description>
+    <Authors>Иван Захаров</Authors>
+    <Company>CopyPush</Company>
+    <Copyright>Copyright © 2026 Иван Захаров</Copyright>
+    <RepositoryUrl>https://github.com/UniqueGanich/CopyPush</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/UniqueGanich/CopyPush</PackageProjectUrl>
+
+    <!-- single-file publish, framework-dependent (Microsoft.WindowsDesktop.App 8.0.32 уже установлен).
+         Сжатие в single-file поддерживается только для self-contained, поэтому отключаем. -->
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>false</SelfContained>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile>false</EnableCompressionInSingleFile>
+    <DebugType>none</DebugType>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <NoWarn>$(NoWarn);CA1416;WFAC010</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Убираем неявные using'и System.Windows.Forms / System.Drawing:
+         они конфликтуют с System.Windows.Media (Color, Point, Size, Brushes).
+         Явно подключаем их только там, где реально нужно (TrayIcon). -->
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+  </ItemGroup>
+
+</Project>
