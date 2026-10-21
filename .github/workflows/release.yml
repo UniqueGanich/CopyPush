@@ -36,48 +36,14 @@ jobs:
           "version=$v" >> $env:GITHUB_OUTPUT
           "tag=$tag" >> $env:GITHUB_OUTPUT
 
-      - name: Сборка self-contained (не требует .NET)
-        run: >
-          dotnet publish --configuration Release -r win-x64 --self-contained true
-          -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
-          -p:EnableCompressionInSingleFile=true -p:DebugType=none
-          -o dist/self-contained
-
-      - name: Сборка framework-dependent (нужен .NET 8 Desktop Runtime)
-        run: >
-          dotnet publish --configuration Release -r win-x64 --self-contained false
-          -p:PublishSingleFile=true -p:DebugType=none
-          -o dist/framework-dependent
-
       - name: Иконка
         run: powershell -ExecutionPolicy Bypass -File tools/make-icon.ps1
 
-      - name: Упаковка архивов
+      - name: Сборка и упаковка архивов
         shell: pwsh
         run: |
           $v = "${{ steps.ver.outputs.version }}"
-          $tag = "${{ steps.ver.outputs.tag }}"
-
-          New-Item -ItemType Directory -Force -Path release | Out-Null
-
-          # --- self-contained: работает на любой Windows 10/11 без предустановок ---
-          $sc = "release/CopyPush-$v-win-x64"
-          New-Item -ItemType Directory -Force -Path $sc | Out-Null
-          Copy-Item dist/self-contained/CopyPush.exe $sc
-          Copy-Item tools/Uninstall.cmd $sc
-          Copy-Item README.md $sc
-          Copy-Item LICENSE $sc
-          Compress-Archive -Path "$sc/*" -DestinationPath "release/CopyPush-$v-win-x64.zip"
-
-          # --- framework-dependent: ~24 МБ, требуется .NET 8 Desktop Runtime ---
-          $fw = "release/CopyPush-$v-win-x64-small"
-          New-Item -ItemType Directory -Force -Path $fw | Out-Null
-          Copy-Item dist/framework-dependent/CopyPush.exe $fw
-          Copy-Item tools/Uninstall.cmd $fw
-          Copy-Item README.md $fw
-          Copy-Item LICENSE $fw
-          Compress-Archive -Path "$fw/*" -DestinationPath "release/CopyPush-$v-win-x64-small.zip"
-
+          ./tools/pack-release.ps1 -Version $v
           Get-ChildItem release -Filter *.zip | ForEach-Object { "{0}  {1:N1} МБ" -f $_.Name, ($_.Length/1MB) }
 
       - name: Опубликовать релиз
