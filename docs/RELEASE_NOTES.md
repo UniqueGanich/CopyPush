@@ -8,38 +8,26 @@
 [![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/UniqueGanich/CopyPush/blob/main/LICENSE)
 [![Languages](https://img.shields.io/badge/languages-10%20languages-0078D4)](https://github.com/UniqueGanich/CopyPush/blob/main/src/CopyPush/Services/Localization.cs)
 
-**Маленькая утилита для Windows 10/11: при копировании по `Ctrl+C` у курсора мыши
-всплывает плашка «Скопировано» — плавно поднимается вверх и растворяется.**
-
-**A tiny Windows utility for Windows 10/11: whenever you copy with `Ctrl+C`, a neat
-«Copied» toast pops up right at your mouse cursor — it rises smoothly and fades out.**
-
-**[Русский](#русский)** · **[English](#english)**
-
 </div>
 
 ---
 
-## ⬇ Скачать / Download
+## 🇷🇺 Русский
 
-| Файл / File | Размер / Size | Требования / Requires |
+**Маленькая утилита для Windows 10/11: при копировании по `Ctrl+C` у курсора мыши
+всплывает плашка «Скопировано» — плавно поднимается вверх и растворяется.**
+
+### ⬇ Скачать
+
+| Что скачать | Размер | Требования |
 |---|---|---|
-| [**CopyPush-1.0.0-win-x64.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0.0-win-x64.zip) | 63.5 МБ / MB | ничего, работает сразу / nothing, works out of the box |
-| [**CopyPush-1.0.0-win-x64-small.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0.0-win-x64-small.zip) | 6.4 МБ / MB | [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) |
+| [**CopyPush-1.0.0-win-x64.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0.0-win-x64.zip) | 63.5 МБ | ничего, работает сразу |
+| [**CopyPush-1.0.0-win-x64-small.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0.0-win-x64-small.zip) | 6.4 МБ | [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) |
 
-**Установка / Install**
-**Русский:** распакуйте архив в любую папку и запустите `CopyPush.exe` — появится иконка в трее, и всё готово.
-**English:** unpack the archive anywhere and run `CopyPush.exe` — an icon appears in the tray, that's it.
+**Установка:** распакуйте архив в любую папку и запустите `CopyPush.exe` — появится иконка в трее, и всё готово.
+**Удаление:** запустите `Uninstall.cmd` из той же папки.
 
-**Удаление / Uninstall**
-**Русский:** запустите `Uninstall.cmd` из той же папки.
-**English:** run `Uninstall.cmd` from the same folder.
-
----
-
-## Что нового / What's new
-
-### Русский
+### Что нового
 
 - **Глобальная привязка `Ctrl+C`** — работает в любом приложении, а не только в вашем.
 - **Ничего не ломает.** `Ctrl+C` не перехватывается: используется хук *на чтение*, поэтому
@@ -61,7 +49,30 @@
 - **Автозапуск включён по умолчанию** — отключается в меню иконки в трее.
 - **Пишет в журнал всё, что происходит**, включая непойманные ошибки, — `%LOCALAPPDATA%\CopyPush\CopyPush.log`.
 
-### English
+### Требования
+
+- Windows 10 версии 19041 (20H1) или новее
+- Windows 11 — полная поддержка, включая живую смену темы
+- Права администратора **не нужны**
+
+---
+
+## 🇬🇧 English
+
+**A tiny Windows utility for Windows 10/11: whenever you copy with `Ctrl+C`, a neat
+«Copied» toast pops up right at your mouse cursor — it rises smoothly and fades out.**
+
+### ⬇ Download
+
+| What to download | Size | Requires |
+|---|---|---|
+| [**CopyPush-1.0.0-win-x64.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0.0-win-x64.zip) | 63.5 MB | nothing, works out of the box |
+| [**CopyPush-1.0.0-win-x64-small.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0.0-win-x64-small.zip) | 6.4 MB | [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) |
+
+**Install:** unpack the archive anywhere and run `CopyPush.exe` — an icon appears in the tray, that's it.
+**Uninstall:** run `Uninstall.cmd` from the same folder.
+
+### What's new
 
 - **Global `Ctrl+C` binding** — works in every application, not just yours.
 - **Breaks nothing.** `Ctrl+C` is never swallowed: the hook is *read-only*, so it still interrupts
@@ -82,12 +93,11 @@
 - **Runs at startup by default** — switch it off from the tray icon menu.
 - **Logs everything that happens**, including unhandled errors — `%LOCALAPPDATA%\CopyPush\CopyPush.log`.
 
----
+### Requirements
 
-## Требования / Requirements
-
-**Русский:** Windows 10 версии 19041 (20H1) или новее, либо Windows 11. Права администратора не нужны.
-**English:** Windows 10 build 19041 (20H1) or newer, or Windows 11. No administrator rights required.
+- Windows 10 build 19041 (20H1) or newer
+- Windows 11 — fully supported, including live theme changes
+- **No administrator rights required**
 
 ---
 

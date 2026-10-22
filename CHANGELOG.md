@@ -1,12 +1,10 @@
 # Changelog
 
-**[Русский](#русский)** · **[English](#english)**
-
 Все значимые изменения в этом проекте.
 Формат основан на [Keep a Changelog](https://keepachangelog.com/ru/1.1.0/),
 проект использует [Semantic Versioning](https://semver.org/lang/ru/).
 
-## Русский
+## 🇷🇺 Русский
 
 ### [1.0.0] — 2026-10-22
 
@@ -34,7 +32,7 @@
 
 ---
 
-## English
+## 🇬🇧 English
 
 ### [1.0.0] — 2026-10-22
 
