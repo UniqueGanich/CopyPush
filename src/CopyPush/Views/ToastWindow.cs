@@ -37,8 +37,9 @@ internal sealed class ToastWindow : Window
     private readonly Border _root;
     private readonly TextBlock _icon;
     private readonly TextBlock _label;
-    private readonly ToastDuration _duration;
+    private ToastDuration _duration;
     private double _contentHeight;
+    private Storyboard? _storyboard;
 
     private Color _foreground = Colors.White;
 
@@ -107,7 +108,19 @@ internal sealed class ToastWindow : Window
         _host.Children.Add(_root);
         Content = _host;
 
+        Prepare(theme, style, duration);
+    }
+
+    /// <summary>
+    /// Готовит окно к показу: цвета, текст, длительность.
+    /// Вызывается при создании и при каждом повторном использовании окна.
+    /// </summary>
+    public void Prepare(ThemeService theme, ToastStyle style, ToastDuration duration)
+    {
+        _duration = duration;
+
         ApplyTheme(theme, style);
+        _label.Text = Loc.Get("toast.copied");
     }
 
     private void ApplyTheme(ThemeService theme, ToastStyle style)
@@ -143,9 +156,22 @@ internal sealed class ToastWindow : Window
         NativeMethods.SetWindowLong32(hwnd, NativeMethods.GWL_EXSTYLE, ex);
     }
 
+    /// <summary>Анимация завершена, окно спрятано и готово к повторному показу.</summary>
+    public event Action<ToastWindow>? Finished;
+
     /// <summary>Показывает окно в нужной точке и запускает анимацию.</summary>
     public void ShowAt(ToastPosition position, int stackIndex, double workAreaLeft, double workAreaTop, double workAreaWidth, double workAreaHeight)
     {
+        // Повторное использование окна: гасим предыдущую анимацию и прозрачность.
+        if (_storyboard is not null)
+        {
+            try { _storyboard.Stop(); } catch { /* уже остановлена */ }
+            _storyboard = null;
+        }
+
+        _host.Opacity = 0;
+        _host.Visibility = Visibility.Visible;
+
         // Замеряем сам пилюль (а не окно) - у окна DesiredSize на этом этапе ещё пустой.
         _root.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
         var desired = _root.DesiredSize;
@@ -275,9 +301,21 @@ internal sealed class ToastWindow : Window
 
         storyboard.Completed += (_, _) =>
         {
-            try { Close(); } catch { /* уже закрыто */ }
+            // Окно не закрываем, а прячем: оно переиспользуется при следующем
+            // копировании. Создание нового WPF-окна с тенью каждый раз - это
+            // лишние аллокации и задержка появления.
+            try
+            {
+                Visibility = Visibility.Hidden;
+                Finished?.Invoke(this);
+            }
+            catch
+            {
+                // уже закрыто
+            }
         };
 
+        _storyboard = storyboard;
         storyboard.Begin(this, isControllable: true);
     }
 

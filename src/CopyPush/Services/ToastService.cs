@@ -18,9 +18,15 @@ internal sealed class ToastService
     /// </summary>
     private const int DebounceMs = 350;
 
+    /// <summary>
+    /// Сколько окон плашки держим про запас. Окна переиспользуются: создавать
+    /// новое WPF-окно с тенью на каждое копирование - лишние аллокации и задержка.
+    /// </summary>
+    private const int PoolSize = 4;
+
     private readonly ThemeService _theme;
     private readonly SettingsService _settings;
-    private readonly List<ToastWindow> _active = new();
+    private readonly List<ToastWindow> _pool = new();
     private DateTime _lastShownUtc = DateTime.MinValue;
 
     public ToastService(ThemeService theme, SettingsService settings)
@@ -49,19 +55,38 @@ internal sealed class ToastService
                 return;
             }
 
-            var window = new ToastWindow(_theme, _settings.Style, _settings.Duration);
-            int index = _active.Count;
-
-            window.Closed += (_, _) =>
+            // Берём спрятанное окно из пула, иначе создаём новое.
+            int visible = 0;
+            foreach (var w in _pool)
             {
-                _active.Remove(window);
-            };
+                if (w.IsVisible) visible++;
+            }
 
-            _active.Add(window);
+            ToastWindow? window = null;
+            foreach (var w in _pool)
+            {
+                if (!w.IsVisible) { window = w; break; }
+            }
+
+            if (window is null)
+            {
+                if (_pool.Count < PoolSize)
+                {
+                    window = new ToastWindow(_theme, _settings.Style, _settings.Duration);
+                    _pool.Add(window);
+                }
+                else
+                {
+                    // Пул заполнен - переиспользуем самое старое окно.
+                    window = _pool[0];
+                }
+            }
+
+            window.Prepare(_theme, _settings.Style, _settings.Duration);
 
             var (left, top, width, height) = GetWorkAreaDip();
 
-            window.ShowAt(_settings.Position, index, left, top, width, height);
+            window.ShowAt(_settings.Position, visible, left, top, width, height);
         }
         catch (Exception ex)
         {
@@ -80,7 +105,10 @@ internal sealed class ToastService
     {
         try
         {
+            // Прогреваем одно из пуловых окон и оставляем его в пуле.
             var window = new ToastWindow(_theme, _settings.Style, _settings.Duration);
+            _pool.Add(window);
+
             window.Left = -32000;
             window.Top = -32000;
             window.Opacity = 0;
@@ -91,7 +119,15 @@ internal sealed class ToastService
                 System.Windows.Threading.DispatcherPriority.Background,
                 (_, _) =>
                 {
-                    try { window.Close(); } catch { /* игнорируем */ }
+                    try
+                    {
+                        window.Visibility = Visibility.Hidden;
+                        window.Opacity = 1;
+                    }
+                    catch
+                    {
+                        // игнорируем
+                    }
                 },
                 System.Windows.Threading.Dispatcher.CurrentDispatcher);
 
@@ -106,11 +142,11 @@ internal sealed class ToastService
 
     public void CloseAll()
     {
-        foreach (var w in _active.ToArray())
+        foreach (var w in _pool)
         {
             try { w.Close(); } catch { /* игнорируем */ }
         }
-        _active.Clear();
+        _pool.Clear();
     }
 
     /// <summary>
