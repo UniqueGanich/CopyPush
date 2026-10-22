@@ -33,6 +33,8 @@ Run `Uninstall.cmd` from the same folder.
 - Три варианта оформления: системный, акцентный, контрастный
 - Цвета системной темы, акцент подхватывается на лету
 - Окно не перехватывает клики, не активируется, не светится в `Alt+Tab`
+- Поверх полноэкранных окон (игры, видео) плашка не появляется
+- В журнал пишутся в том числе непойманные ошибки
 - Журнал событий в `%LOCALAPPDATA%\CopyPush\CopyPush.log`
 
 ## Requirements
@@ -60,6 +62,8 @@ pops up right at your mouse cursor — it rises smoothly and fades out.
 - Three styles: system, accent, contrast
 - Follows the system theme, accent colour picked up live
 - The window never steals clicks, never activates, never shows in `Alt+Tab`
+- No toast appears over fullscreen windows (games, video)
+- Unhandled errors are written to the log as well
 - Event log at `%LOCALAPPDATA%\CopyPush\CopyPush.log`
 
 ## Requirements
