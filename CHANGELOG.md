@@ -4,6 +4,13 @@
 Формат основан на [Keep a Changelog](https://keepachangelog.com/ru/1.1.0/),
 проект использует [Semantic Versioning](https://semver.org/lang/ru/).
 
+> **English summary** - see the release notes at
+> [github.com/UniqueGanich/CopyPush/releases](https://github.com/UniqueGanich/CopyPush/releases).
+> Version 1.0.0: a Windows utility that shows a "Copied" toast at the mouse
+> cursor whenever you copy with `Ctrl+C`. Global read-only keyboard hook,
+> copy detection via the clipboard sequence number, 10 interface languages,
+> three visual styles, live Windows theme and accent colour, and a log file.
+
 ## [1.0.0] — 2026-10-21
 
 ### Добавлено

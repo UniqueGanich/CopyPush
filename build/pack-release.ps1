@@ -36,8 +36,21 @@ function Pack([string]$srcDir, [string]$name) {
     New-Item -ItemType Directory -Force -Path $stage | Out-Null
     Copy-Item (Join-Path $srcDir 'CopyPush.exe') $stage
     Copy-Item (Join-Path $ProjectDir 'build\Uninstall.cmd') $stage
-    Copy-Item (Join-Path $ProjectDir 'README.md') $stage
     Copy-Item (Join-Path $ProjectDir 'LICENSE') $stage
+
+    # README в двух языках.
+    # В репозитории README.md - английский (его GitHub показывает всем, кроме
+    # русскоязычных, которым подставляет README.ru.md), а русский - README.ru.md.
+    # В архиве наоборот: русский становится README.md (аудитория утилиты
+    # русскоязычная), английский - README.en.md. Ссылки правим под эти имена.
+    $ru = [System.IO.File]::ReadAllText((Join-Path $ProjectDir 'README.ru.md'), [System.Text.Encoding]::UTF8)
+    $ru = $ru.Replace('[English](README.md)', '[English](README.en.md)')
+    [System.IO.File]::WriteAllText((Join-Path $stage 'README.md'), $ru, (New-Object System.Text.UTF8Encoding($false)))
+
+    $en = [System.IO.File]::ReadAllText((Join-Path $ProjectDir 'README.md'), [System.Text.Encoding]::UTF8)
+    $en = $en.Replace('[Русский](README.ru.md)', '[Русский](README.md)')
+    [System.IO.File]::WriteAllText((Join-Path $stage 'README.en.md'), $en, (New-Object System.Text.UTF8Encoding($false)))
+
     Compress-Archive -Path (Join-Path $stage '*') -DestinationPath (Join-Path $Out "$name.zip") -CompressionLevel Optimal
     Remove-Item $stage -Recurse -Force
 }

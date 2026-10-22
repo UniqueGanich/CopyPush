@@ -4,188 +4,194 @@
 
 # CopyPush
 
-**Маленькая утилита для Windows: при копировании по `Ctrl+C` у курсора мыши
-всплывает аккуратная плашка «Скопировано».**
+**A tiny Windows utility: whenever you copy with `Ctrl+C`, a neat «Copied» toast
+pops up right at your mouse cursor.**
 
 [![Release](https://img.shields.io/github/v/release/UniqueGanich/CopyPush?label=Release&color=blue)](https://github.com/UniqueGanich/CopyPush/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4?logo=windows)](https://microsoft.com/windows)
-[![Languages](https://img.shields.io/badge/languages-ru%20%7C%20en%20%7C%20uk%20%7C%20de%20%7C%20fr%20%7C%20es%20%7C%20ja%20%7C%20ko%20%7C%20zh-0078D4)](src/CopyPush/Services/Loc.cs)
+[![Languages](https://img.shields.io/badge/languages-ru%20%7C%20en%20%7C%20uk%20%7C%20de%20%7C%20fr%20%7C%20es%20%7C%20ja%20%7C%20ko%20%7C%20zh-0078D4)](src/CopyPush/Services/Localization.cs)
 
-[English](README.en.md)
+[Русский](README.ru.md)
 
 </div>
 
 ---
 
-![Скриншот](docs/images/hero.png)
+![Screenshot](docs/images/hero.png)
 
-## Зачем
+## Why
 
-Нажать `Ctrl+C` и **не знать, сработало ли копирование** — мелкое, но постоянное
-раздражание: приходится вставлять в поле, чтобы проверить. CopyPush снимает вопрос
-одной плашкой прямо у курсора.
+Pressing `Ctrl+C` and **not knowing whether it worked** is a small but constant
+annoyance — you have to paste somewhere just to check. CopyPush removes the question
+with a single toast right at your cursor.
 
-## Что умеет
+## Features
 
-- **Глобальная привязка `Ctrl+C`** — работает в любом приложении, а не только в вашем.
-- **Ничего не ломает.** `Ctrl+C` не перехватывается: используется хук *на чтение*.
-  В консоли он по-прежнему прерывает процесс, в играх работает как игровая клавиша.
-- **Без ложных срабатываний.** Плашка появляется, только если содержимое буфера
-  действительно изменилось после нажатия.
-- **Язык подстраивается сам.** интерфейс и надпись «Скопировано» берут язык системы
-  (русский / english / українська / deutsch / français / español / 日本語 / 한국어 / 简体中文 / 繁體中文). Язык можно
-  зафиксировать вручную в меню в трее.
-- **Цвет системной темы.** Фон — как у системных окон, текст контрастный.
-  Акцентный цвет берётся из темы Windows и подхватывается на лету.
-- **Не мешает.** Окно не перехватывает клики, не активируется и не появляется в `Alt+Tab`.
-- **Не выскакивает поверх игр и видео.** Если активное окно занимает весь монитор,
-  плашка не показывается.
-- **Пишет в журнал всё, что происходит** — включая непойманные ошибки, — так что
-  если что-то пойдёт не так, причина будет видна.
-- **Пишет журнал** в `%LOCALAPPDATA%\CopyPush\CopyPush.log` — удобно, если что-то пойдёт не так.
+- **Global `Ctrl+C` binding** — works in every application, not just one.
+- **Breaks nothing.** `Ctrl+C` is never swallowed: a *read-only* hook is used, so it
+  still interrupts a process in the terminal and still acts as a game key.
+- **No false positives.** The toast appears only if the clipboard actually changed
+  after the keypress.
+- **Finds its own language.** the interface and the «Copied» label follow the Windows
+  language (русский / english / українська / deutsch / français / español / 日本語 / 한국어 / 简体中文 / 繁體中文). Any of them
+  can be pinned manually from the tray menu.
+- **Follows the system theme.** The surface matches system windows, the text is
+  contrasting. The accent colour is read from the Windows theme and picked up live.
+- **Stays out of the way.** The window does not steal clicks, does not activate,
+  and never shows up in `Alt+Tab`.
+- **Stays out of the way of games and video.** If the foreground window covers the
+  whole monitor, no toast is shown.
+- **Logs everything that happens** — including unhandled errors — so if something
+  misbehaves, the reason is visible.
+- **Keeps a log** at `%LOCALAPPDATA%\CopyPush\CopyPush.log` in case something
+  misbehaves.
 
-## Установка
+## Installation
 
-Готовые сборки лежат в [Releases](https://github.com/UniqueGanich/CopyPush/releases):
+Prebuilt binaries live in [Releases](https://github.com/UniqueGanich/CopyPush/releases):
 
-| Что скачать | Размер | Требования |
+| What to download | Size | Requires |
 |---|---|---|
-| [**CopyPush-1.0.0-win-x64.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0.0-win-x64.zip) | ~63 МБ | ничего, работает сразу на Windows 10/11 |
-| [**CopyPush-1.0.0-win-x64-small.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0.0-win-x64-small.zip) | ~6 МБ | [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) |
+| [**CopyPush-1.0.0-win-x64.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0.0-win-x64.zip) | ~63 MB | nothing, works out of the box on Windows 10/11 |
+| [**CopyPush-1.0.0-win-x64-small.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0.0-win-x64-small.zip) | ~6 MB | [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) |
 
-1. Скачайте архив и распакуйте в любую папку (например `C:\Tools\CopyPush`).
-2. Запустите `CopyPush.exe` — появится иконка в трее.
-3. Готово: `Ctrl+C` в любом приложении покажет плашку «Скопировано».
+1. Download the archive and unpack it anywhere (e.g. `C:\Tools\CopyPush`).
+2. Run `CopyPush.exe` — an icon appears in the tray.
+3. Done. `Ctrl+C` in any app now shows the «Copied» toast.
 
-Автозапуск по умолчанию **выключен** — включается в меню иконки в трее
-(«Запускать вместе с Windows»).
+Autostart is **off** by default — enable it from the tray menu
+(“Run at startup”).
 
-### Удаление
+### Uninstall
 
-Запустите `Uninstall.cmd` из папки программы — он уберёт автозапуск, настройки и саму программу.
-Ещё можно удалить через «Параметры → Приложения».
+Run `Uninstall.cmd` from the program folder. It removes autostart, settings and
+the program itself. You can also uninstall it from Windows Settings → Apps.
 
-## Настройки
+## Settings
 
-Всё настраивается в меню иконки в трее:
+Everything lives in the tray icon menu:
 
-| Пункт | Варианты |
+| Item | Options |
 |---|---|
-| Показывать уведомление | вкл / выкл |
-| Показывать при любом изменении буфера | вкл / выкл (реагировать на копирование правой кнопкой мыши) |
-| Позиция | у курсора / по центру экрана / в правом нижнем углу |
-| Оформление | системный / акцентный / контрастный |
-| Длительность | быстро / обычно / медленно |
-| **Язык** | автоматически (системный) / русский / english / українська / deutsch / français / español / 日本語 / 한국어 / 简体中文 / 繁體中文 |
-| Запускать вместе с Windows | вкл / выкл |
+| Show notification | on / off |
+| Show on any clipboard change | on / off (also react to right-click → Copy) |
+| Position | at cursor / screen center / bottom right |
+| Style | system / accent / contrast |
+| Duration | fast / normal / slow |
+| **Language** | automatic (system) / русский / english / українська / deutsch / français / español / 日本語 / 한국어 / 简体中文 / 繁體中文 |
+| Run at startup | on / off |
 
-### Три варианта оформления
+### The three styles
 
-| Системный | Акцентный | Контрастный |
+| System | Accent | Contrast |
 |:---:|:---:|:---:|
 | ![](docs/images/style-system.png) | ![](docs/images/style-accent.png) | ![](docs/images/style-contrast.png) |
 
-### Язык
+### Language
 
-По умолчанию язык берётся из системы: `Windows → Параметры → Время и язык → Язык и регион →
-Предпочтительные языки`. Если там первым стоит русский — интерфейс и надпись будут русскими,
-если английский — английскими. Любой из шести поддерживаемых языков можно зафиксировать
-вручную: меню иконки в трее → **Язык**. После смены языка Windows достаточно перезапустить CopyPush.
+By default the language comes from the system: `Windows → Settings → Time & language →
+Language & region → Preferred languages`. If Russian is listed first, the interface and
+the label will be Russian; if English — English. Any of the six supported languages can
+be pinned manually: tray icon menu → **Language**. After changing the Windows language,
+just restart CopyPush.
 
-## Как это работает
+## How it works
 
 ```
-Ctrl+C  ──►  WH_KEYBOARD_LL (наблюдение, ничего не подавляет)
+Ctrl+C  ──►  WH_KEYBOARD_LL (observation only, never swallows the key)
                     │
-                    ├──►  флаг "копирование запрошено" (окно 1.5 с)
+                    ├──►  "copy requested" flag (1.5 s window)
                     │
  WM_CLIPBOARDUPDATE ─┘
-        буфер изменился?
-             │ да                    │ нет
+        did the clipboard change?
+             │ yes                   │ no
              ▼                       ▼
-        показать плашку        ничего не делать
+        show the toast          do nothing
 ```
 
-Благодаря проверке «буфер реально изменился» `Ctrl+C` в терминале (это прерывание
-процесса) и в играх не вызывают ложных уведомлений.
+Because the app verifies that the clipboard actually changed, `Ctrl+C` in a
+terminal (which interrupts the process) and in games never trigger a false
+notification.
 
-Технически:
+Technically:
 
-- **Хук** — `SetWindowsHookEx(WH_KEYBOARD_LL)`. Обработчик всегда возвращает
-  `CallNextHookEx`, поэтому ввод уходит в приложение без изменений.
-- **Подтверждение** — `AddClipboardFormatListener` + `WM_CLIPBOARDUPDATE`,
-  плюс `GetClipboardSequenceNumber` как страховка.
-- **Плашка** — WPF-окно с `AllowsTransparency` (layered window, попиксельная альфа),
-  расширенные стили `WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW | WS_EX_TRANSPARENT`.
-- **Анимация** — `Storyboard` над `RenderTransform` (подъём на 48 px) и `Opacity`.
-- **Тема** — `AppsUseLightTheme` + акцент из `Explorer\Accent\AccentPalette`
-  и WinRT `UISettings`; цвета перечитываются при смене темы.
-- **Язык** — `CultureInfo.CurrentUICulture` (язык системы) либо зафиксированный в настройках.
+- **Hook** — `SetWindowsHookEx(WH_KEYBOARD_LL)`. The callback always returns
+  `CallNextHookEx`, so input reaches the app unchanged.
+- **Confirmation** — `AddClipboardFormatListener` + `WM_CLIPBOARDUPDATE`,
+  with `GetClipboardSequenceNumber` as a fallback.
+- **Toast** — a WPF window with `AllowsTransparency` (layered window, per-pixel
+  alpha) and `WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW | WS_EX_TRANSPARENT`.
+- **Animation** — a `Storyboard` over `RenderTransform` (48 px rise) and `Opacity`.
+- **Theme** — `AppsUseLightTheme` plus the accent from `Explorer\Accent\AccentPalette`
+  and WinRT `UISettings`; colours are re-read when the theme changes.
+- **Language** — `CultureInfo.CurrentUICulture` (system language) or the language
+  pinned in the settings.
 
-## Требования
+## Requirements
 
-- Windows 10 версии 19041 (20H1) или новее
-- Windows 11 — полная поддержка, включая живую смену темы
-- Права администратора **не нужны**
+- Windows 10 build 19041 (20H1) or newer
+- Windows 11 — fully supported, including live theme changes
+- **No administrator rights required**
 
-## Сборка из исходников
+## Building from source
 
-Нужен [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0).
+Requires the [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0).
 
 ```bash
 git clone https://github.com/UniqueGanich/CopyPush.git
 cd CopyPush
 
-# один .exe со всем внутри (не требует .NET на компьютере)
+# single .exe with everything inside (no .NET needed on the target machine)
 dotnet publish src/CopyPush/CopyPush.csproj -c Release -r win-x64 --self-contained true \
   -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true \
   -p:EnableCompressionInSingleFile=true -o out
 ```
 
-Скрипты в `build/`:
+Scripts in `build/`:
 
-| Скрипт | Что делает |
+| Script | What it does |
 |---|---|
-| `build\deploy.ps1` | сборка + установка + запуск |
-| `build\pack-release.ps1` | сборка + упаковка релизных архивов |
-| `build\make-icon.ps1` | генерация иконки приложения |
-| `build\make-screenshots.ps1` | скриншоты для README |
-| `build\verify-locales.ps1` | проверка целостности таблицы переводов |
-| `build\verify-project.ps1` | проверка namespace'ов и гомоглифов в коде |
-| `build\Uninstall.cmd` | деинсталлятор |
+| `build\deploy.ps1` | build + install + launch |
+| `build\pack-release.ps1` | build + package the release archives |
+| `build\make-icon.ps1` | generate the application icon |
+| `build\make-screenshots.ps1` | screenshots for the README |
+| `build\verify-locales.ps1` | check the translation table for missing keys |
+| `build\verify-project.ps1` | check namespaces and homoglyphs in the code |
+| `build\Uninstall.cmd` | uninstaller |
 
-## Тесты
+## Tests
 
-В репозитории есть набор проверок локализации — отдельный проект без внешних зависимостей:
+The repository contains a set of localisation checks — a standalone project with no
+external dependencies:
 
 ```bash
 dotnet run --project tests/CopyPush.Tests --configuration Release
 ```
 
-Он проверяет, что язык системы корректно отображается в поддерживаемый (включая
-разделение китайского на упрощённый и традиционный по региону) и что при языке,
-которого нет в списке, автоматически выбирается английский. Тесты запускаются в CI.
+It verifies that the system language maps to a supported one (including splitting
+Chinese into simplified and traditional by region) and that an unsupported system
+language falls back to English. The tests run in CI.
 
-## Структура проекта
+## Project layout
 
 ```
 CopyPush/
-├── src/CopyPush/            исходники приложения
-│   ├── Program.cs           точка входа, сборка всех компонентов
-│   ├── Interop/             P/Invoke: хук, буфер, окно, курсор, DPI
+├── src/CopyPush/            application sources
+│   ├── Program.cs           entry point, wires everything together
+│   ├── Interop/             P/Invoke: hook, clipboard, window, cursor, DPI
 │   ├── Hooks/               KeyboardHook (WH_KEYBOARD_LL), MessageWindow
 │   ├── Services/            CopyDetector, ThemeService, ToastService, SettingsService,
-│   │                        TrayIcon, Loc (локализация), Logger
-│   ├── Views/ToastWindow.cs плашка (интерфейс строится в коде, без XAML)
-│   └── Resources/           иконка приложения
-├── build/                   скрипты сборки, упаковки и деинсталлятор
-├── tests/CopyPush.Tests/    проверки выбора языка
-├── docs/                    заметки релиза и изображения для README
-├── .github/workflows/       CI (сборка) и Release (публикация по тегу)
-└── global.json              фиксация версии .NET SDK (8.0.x)
+│   │                        TrayIcon, Loc (localisation), Logger
+│   ├── Views/ToastWindow.cs the toast (UI built in code, no XAML)
+│   └── Resources/           application icon
+├── build/                   build, packaging and uninstall scripts
+├── tests/CopyPush.Tests/    language selection tests
+├── docs/                    release notes and README images
+├── .github/workflows/       CI (build) and Release (publish on tag)
+└── global.json              pins the .NET SDK version (8.0.x)
 ```
 
-## Лицензия
+## License
 
-[MIT](LICENSE) © 2026 Иван Захаров
+[MIT](LICENSE) © 2026 Ivan Zakharov
