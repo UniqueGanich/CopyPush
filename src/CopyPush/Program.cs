@@ -26,12 +26,45 @@ internal static class Program
 
         app.DispatcherUnhandledException += (_, e) =>
         {
-            // Приложение - фоновое. Любая непойманная ошибка не должна ронять его.
+            // Приложение - фоновое: непойманная ошибка не должна его ронять.
+            // Но молчать нельзя - пишем в журнал, иначе поломку не заметить.
+            Logger.Error("Unhandled dispatcher exception", e.Exception);
             e.Handled = true;
         };
 
-        var context = new AppContext();
-        app.Run();
+        AppContext? context = null;
+        try
+        {
+            context = new AppContext();
+        }
+        catch (Exception ex)
+        {
+            // Не удалось запуститься (например, не установился хук) - сообщаем
+            // пользователю и выходим, а не падаем с окном ошибки.
+            Logger.Error("CopyPush failed to start", ex);
+            try
+            {
+                MessageBox.Show(
+                    "CopyPush could not start." + Environment.NewLine + Environment.NewLine + ex.Message,
+                    "CopyPush", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch
+            {
+                // MessageBox может быть недоступен - не критично.
+            }
+
+            return 1;
+        }
+
+        try
+        {
+            app.Run();
+        }
+        finally
+        {
+            context.Dispose();
+        }
+
         return 0;
     }
 }
@@ -117,6 +150,8 @@ internal sealed class AppContext : IDisposable
 
     private void Shutdown()
     {
+        // Закрываем видимые плашки, чтобы они не "зависли" на экране.
+        _toastService.CloseAll();
         Application.Current?.Shutdown();
     }
 

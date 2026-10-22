@@ -41,6 +41,14 @@ internal sealed class ToastService
 
             _lastShownUtc = now;
 
+            // Поверх полноэкранных окон (игры, видео) плашку не показываем -
+            // она всё равно никому не нужна, а мешает.
+            if (IsForegroundFullscreen())
+            {
+                Logger.Info("foreground window is fullscreen - toast skipped");
+                return;
+            }
+
             var window = new ToastWindow(_theme, _settings.Style, _settings.Duration);
             int index = _active.Count;
 
@@ -55,9 +63,11 @@ internal sealed class ToastService
 
             window.ShowAt(_settings.Position, index, left, top, width, height);
         }
-        catch
+        catch (Exception ex)
         {
-            // Плашка - украшение. Любая ошибка не должна ронять приложение.
+            // Плашка - украшение: ошибка не должна ронять приложение.
+            // Но её обязательно видно в журнале, иначе поломка незаметна.
+            Logger.Error("Failed to show toast", ex);
         }
     }
 
@@ -87,9 +97,10 @@ internal sealed class ToastService
 
             timer.Start();
         }
-        catch
+        catch (Exception ex)
         {
-            // прогрев не критичен
+            // прогрев не критичен, но причина полезна в журнале
+            Logger.Error("Toast warm-up failed", ex);
         }
     }
 
@@ -100,6 +111,37 @@ internal sealed class ToastService
             try { w.Close(); } catch { /* игнорируем */ }
         }
         _active.Clear();
+    }
+
+    /// <summary>
+    /// Занимает ли активное окно весь монитор (полноэкранный режим).
+    /// </summary>
+    private static bool IsForegroundFullscreen()
+    {
+        try
+        {
+            var hwnd = NativeMethods.GetForegroundWindow();
+            if (hwnd == IntPtr.Zero) return false;
+
+            if (!NativeMethods.GetWindowRect(hwnd, out var rect)) return false;
+
+            var monitor = NativeMethods.MonitorFromWindow(hwnd, NativeMethods.MONITOR_DEFAULTTONEAREST);
+            var info = new NativeMethods.MONITORINFO
+            {
+                cbSize = System.Runtime.InteropServices.Marshal.SizeOf<NativeMethods.MONITORINFO>(),
+            };
+
+            if (!NativeMethods.GetMonitorInfo(monitor, ref info)) return false;
+
+            return rect.Left <= info.rcMonitor.Left
+                && rect.Top <= info.rcMonitor.Top
+                && rect.Right >= info.rcMonitor.Right
+                && rect.Bottom >= info.rcMonitor.Bottom;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     /// <summary>Рабочая область монитора с курсором, в DIP-координатах.</summary>

@@ -40,6 +40,10 @@ with a single toast right at your cursor.
   contrasting. The accent colour is read from the Windows theme and picked up live.
 - **Stays out of the way.** The window does not steal clicks, does not activate,
   and never shows up in `Alt+Tab`.
+- **Stays out of the way of games and video.** If the foreground window covers the
+  whole monitor, no toast is shown.
+- **Logs everything that happens** — including unhandled errors — so if something
+  misbehaves, the reason is visible.
 - **Keeps a log** at `%LOCALAPPDATA%\CopyPush\CopyPush.log` in case something
   misbehaves.
 
@@ -153,7 +157,21 @@ Scripts in `build/`:
 | `build\make-icon.ps1` | generate the application icon |
 | `build\make-screenshots.ps1` | screenshots for the README |
 | `build\verify-locales.ps1` | check the translation table for missing keys |
+| `build\verify-project.ps1` | check namespaces and homoglyphs in the code |
 | `build\Uninstall.cmd` | uninstaller |
+
+## Tests
+
+The repository contains a set of localisation checks — a standalone project with no
+external dependencies:
+
+```bash
+dotnet run --project tests/CopyPush.Tests --configuration Release
+```
+
+It verifies that the system language maps to a supported one (including splitting
+Chinese into simplified and traditional by region) and that an unsupported system
+language falls back to English. The tests run in CI.
 
 ## Project layout
 
@@ -168,6 +186,7 @@ CopyPush/
 │   ├── Views/ToastWindow.cs the toast (UI built in code, no XAML)
 │   └── Resources/           application icon
 ├── build/                   build, packaging and uninstall scripts
+├── tests/CopyPush.Tests/    language selection tests
 ├── docs/                    release notes and README images
 ├── .github/workflows/       CI (build) and Release (publish on tag)
 └── global.json              pins the .NET SDK version (8.0.x)
