@@ -33,19 +33,18 @@ with a single toast right at your cursor.
   still interrupts a process in the terminal and still acts as a game key.
 - **No false positives.** The toast appears only if the clipboard actually changed
   after the keypress.
-- **Finds its own language.** the interface and the «Copied» label follow the Windows
-  language (русский / english / українська / deutsch / français / español / 日本語 / 한국어 / 简体中文 / 繁體中文). Any of them
-  can be pinned manually from the tray menu.
+- **Finds its own language.** The interface and the «Copied» label follow the Windows
+  language: Русский, English, Українська, Deutsch, Français, Español, 日本語, 한국어, 简体中文, 繁體中文.
+  Any of them can be pinned manually from the tray menu → **Language** (this item is always
+  labelled in English, so it can be found even if the interface ended up in an unfamiliar language).
 - **Follows the system theme.** The surface matches system windows, the text is
   contrasting. The accent colour is read from the Windows theme and picked up live.
-- **Stays out of the way.** The window does not steal clicks, does not activate,
+- **Never in the way.** The window does not steal clicks, does not activate,
   and never shows up in `Alt+Tab`.
-- **Stays out of the way of games and video.** If the foreground window covers the
+- **Never over games and video.** If the foreground window covers the
   whole monitor, no toast is shown.
 - **Logs everything that happens** — including unhandled errors — so if something
-  misbehaves, the reason is visible.
-- **Keeps a log** at `%LOCALAPPDATA%\CopyPush\CopyPush.log` in case something
-  misbehaves.
+  misbehaves, the reason is visible. Log: `%LOCALAPPDATA%\CopyPush\CopyPush.log`.
 
 ## Installation
 
@@ -60,7 +59,7 @@ Prebuilt binaries live in [Releases](https://github.com/UniqueGanich/CopyPush/re
 2. Run `CopyPush.exe` — an icon appears in the tray.
 3. Done. `Ctrl+C` in any app now shows the «Copied» toast.
 
-Autostart is **off** by default — enable it from the tray menu
+Autostart is **on** by default — switch it off from the tray menu
 (“Run at startup”).
 
 ### Uninstall
@@ -79,7 +78,7 @@ Everything lives in the tray icon menu:
 | Position | at cursor / screen center / bottom right |
 | Style | system / accent / contrast |
 | Duration | fast / normal / slow |
-| **Language** | automatic (system) / русский / english / українська / deutsch / français / español / 日本語 / 한국어 / 简体中文 / 繁體中文 |
+| **Language** | automatic (system) / Русский / English / Українська / Deutsch / Français / Español / 日本語 / 한국어 / 简体中文 / 繁體中文 |
 | Run at startup | on / off |
 
 ### The three styles
@@ -92,9 +91,10 @@ Everything lives in the tray icon menu:
 
 By default the language comes from the system: `Windows → Settings → Time & language →
 Language & region → Preferred languages`. If Russian is listed first, the interface and
-the label will be Russian; if English — English. Any of the six supported languages can
-be pinned manually: tray icon menu → **Language**. After changing the Windows language,
-just restart CopyPush.
+the label will be Russian; if English — English. Any of the ten supported languages can
+be pinned manually: tray icon menu → **Language** (this item is always labelled in English,
+so it can be found even if the interface ended up in an unfamiliar language). After changing
+the Windows language, just restart CopyPush.
 
 ## How it works
 
@@ -182,7 +182,7 @@ CopyPush/
 │   ├── Interop/             P/Invoke: hook, clipboard, window, cursor, DPI
 │   ├── Hooks/               KeyboardHook (WH_KEYBOARD_LL), MessageWindow
 │   ├── Services/            CopyDetector, ThemeService, ToastService, SettingsService,
-│   │                        TrayIcon, Loc (localisation), Logger
+│   │                        TrayIcon, Localization (localisation), Logger
 │   ├── Views/ToastWindow.cs the toast (UI built in code, no XAML)
 │   └── Resources/           application icon
 ├── build/                   build, packaging and uninstall scripts
