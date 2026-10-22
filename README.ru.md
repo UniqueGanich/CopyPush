@@ -52,8 +52,8 @@
 
 | Что скачать | Размер | Требования |
 |---|---|---|
-| [**CopyPush-1.0.0-win-x64.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0.0-win-x64.zip) | 63.5 МБ | ничего, работает сразу на Windows 10/11 |
-| [**CopyPush-1.0.0-win-x64-small.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0.0-win-x64-small.zip) | 6.4 МБ | [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) |
+| [**CopyPush-1.0.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0.zip) | 63.5 МБ | ничего, работает сразу на Windows 10/11 |
+| [**CopyPush-1.0-small.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0-small.zip) | 6.4 МБ | [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) |
 
 1. Скачайте архив и распакуйте в любую папку (например `C:\Tools\CopyPush`).
 2. Запустите `CopyPush.exe` — появится иконка в трее.
