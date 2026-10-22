@@ -12,6 +12,50 @@
 
 ---
 
+## 🇬🇧 English
+
+**A tiny Windows utility for Windows 10/11: whenever you copy with `Ctrl+C`, a neat
+«Copied» toast pops up right at your mouse cursor — it rises smoothly and fades out.**
+
+### ⬇ Download
+
+| What to download | Size | Requires |
+|---|---|---|
+| [**CopyPush-1.0.0-win-x64.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0.0-win-x64.zip) | 63.5 MB | nothing, works out of the box |
+| [**CopyPush-1.0.0-win-x64-small.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0.0-win-x64-small.zip) | 6.4 MB | [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) |
+
+**Install:** unpack the archive anywhere and run `CopyPush.exe` — an icon appears in the tray, that's it.
+**Uninstall:** run `Uninstall.cmd` from the same folder.
+
+### What's new
+
+- **Global `Ctrl+C` binding** — works in every application, not just yours.
+- **Breaks nothing.** `Ctrl+C` is never swallowed: the hook is *read-only*, so it still interrupts
+  a process in the console and works as a normal game key in games.
+- **No false positives.** The toast appears only if the clipboard really changed after the key press.
+- **Finds its own language.** The interface and the «Copied» caption follow the system language:
+  Русский, English, Українська, Deutsch, Français, Español, 日本語, 한국어, 简体中文, 繁體中文.
+  If the system language is not supported, English is used automatically. Any language can be pinned
+  manually: tray icon menu → **Language** (this item is always labelled in English so it can be found
+  even if the interface ended up in an unfamiliar language).
+- **System theme colours.** The background matches system windows, the text is contrast.
+  The accent colour is taken from the Windows theme and picked up live.
+- **Three styles:** system, accent, contrast.
+- **Three positions:** at the cursor, screen centre, bottom right.
+- **Three durations:** fast, normal, slow.
+- **Never in the way.** The window never steals clicks, never activates and never shows in `Alt+Tab`.
+- **Never over games and video.** If the active window covers the whole monitor, no toast is shown.
+- **Runs at startup by default** — switch it off from the tray icon menu.
+- **Logs everything that happens**, including unhandled errors — `%LOCALAPPDATA%\CopyPush\CopyPush.log`.
+
+### Requirements
+
+- Windows 10 build 19041 (20H1) or newer
+- Windows 11 — fully supported, including live theme changes
+- **No administrator rights required**
+
+---
+
 ## 🇷🇺 Русский
 
 **Маленькая утилита для Windows 10/11: при копировании по `Ctrl+C` у курсора мыши
@@ -57,48 +101,4 @@
 
 ---
 
-## 🇬🇧 English
-
-**A tiny Windows utility for Windows 10/11: whenever you copy with `Ctrl+C`, a neat
-«Copied» toast pops up right at your mouse cursor — it rises smoothly and fades out.**
-
-### ⬇ Download
-
-| What to download | Size | Requires |
-|---|---|---|
-| [**CopyPush-1.0.0-win-x64.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0.0-win-x64.zip) | 63.5 MB | nothing, works out of the box |
-| [**CopyPush-1.0.0-win-x64-small.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0.0-win-x64-small.zip) | 6.4 MB | [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) |
-
-**Install:** unpack the archive anywhere and run `CopyPush.exe` — an icon appears in the tray, that's it.
-**Uninstall:** run `Uninstall.cmd` from the same folder.
-
-### What's new
-
-- **Global `Ctrl+C` binding** — works in every application, not just yours.
-- **Breaks nothing.** `Ctrl+C` is never swallowed: the hook is *read-only*, so it still interrupts
-  a process in the console and works as a normal game key in games.
-- **No false positives.** The toast appears only if the clipboard really changed after the key press.
-- **Finds its own language.** The interface and the «Copied» caption follow the system language:
-  Русский, English, Українська, Deutsch, Français, Español, 日本語, 한국어, 简体中文, 繁體中文.
-  If the system language is not supported, English is used automatically. Any language can be pinned
-  manually: tray icon menu → **Language** (this item is always labelled in English so it can be found
-  even if the interface ended up in an unfamiliar language).
-- **System theme colours.** The background matches system windows, the text is contrast.
-  The accent colour is taken from the Windows theme and picked up live.
-- **Three styles:** system, accent, contrast.
-- **Three positions:** at the cursor, screen centre, bottom right.
-- **Three durations:** fast, normal, slow.
-- **Never in the way.** The window never steals clicks, never activates and never shows in `Alt+Tab`.
-- **Never over games and video.** If the active window covers the whole monitor, no toast is shown.
-- **Runs at startup by default** — switch it off from the tray icon menu.
-- **Logs everything that happens**, including unhandled errors — `%LOCALAPPDATA%\CopyPush\CopyPush.log`.
-
-### Requirements
-
-- Windows 10 build 19041 (20H1) or newer
-- Windows 11 — fully supported, including live theme changes
-- **No administrator rights required**
-
----
-
-[Исходный код и подробности / Source and details](https://github.com/UniqueGanich/CopyPush) · [MIT](https://github.com/UniqueGanich/CopyPush/blob/main/LICENSE)
+[Source and details / Исходный код и подробности](https://github.com/UniqueGanich/CopyPush) · [MIT](https://github.com/UniqueGanich/CopyPush/blob/main/LICENSE)

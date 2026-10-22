@@ -1,36 +1,8 @@
 # Changelog
 
-Все значимые изменения в этом проекте.
-Формат основан на [Keep a Changelog](https://keepachangelog.com/ru/1.1.0/),
-проект использует [Semantic Versioning](https://semver.org/lang/ru/).
-
-## 🇷🇺 Русский
-
-### [1.0.0] — 2026-10-22
-
-#### Добавлено
-
-- Глобальная привязка `Ctrl+C` с всплывающей плашкой «Скопировано» у курсора мыши
-- Определение копирования по изменению буфера обмена — без ложных срабатываний
-- Локализация на 10 языков (Русский, English, Українська, Deutsch, Français, Español, 日本語, 한국어, 简体中文, 繁體中文)
-  с автоматическим выбором языка системы и ручным переключением в меню трея
-- Три варианта оформления плашки: системный, акцентный, контрастный
-- Три варианта длительности анимации и три позиции на экране
-- Живое обновление цветов при смене темы или акцента Windows
-- Журнал событий в `%LOCALAPPDATA%\CopyPush\CopyPush.log`
-- Автозапуск (включён по умолчанию) и запись в «Параметры → Приложения» с деинсталлятором
-- Сборка и публикация по тегу через GitHub Actions
-
-#### Технические решения
-
-- Низкоуровневый хук `WH_KEYBOARD_LL` только на чтение — `Ctrl+C` не подавляется
-- Подтверждение копирования через `WM_CLIPBOARDUPDATE` и `GetClipboardSequenceNumber`
-- Окно-уведомление на WPF с `AllowsTransparency` (layered window, попиксельная альфа)
-- Акцентный цвет берётся из `Explorer\Accent\AccentPalette` и WinRT `UISettings` —
-  реестровый `DWM\AccentColor` может хранить устаревшее значение
-- Единый `.exe` в single-file: self-contained (68 МБ) и framework-dependent (24 МБ)
-
----
+All notable changes to this project.
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## 🇬🇧 English
 
@@ -57,5 +29,33 @@
 - The accent colour is taken from `Explorer\Accent\AccentPalette` and WinRT `UISettings` —
   the registry value `DWM\AccentColor` may hold a stale one
 - A single `.exe` in single-file form: self-contained (68 MB) and framework-dependent (24 MB)
+
+---
+
+## 🇷🇺 Русский
+
+### [1.0.0] — 2026-10-22
+
+#### Добавлено
+
+- Глобальная привязка `Ctrl+C` с всплывающей плашкой «Скопировано» у курсора мыши
+- Определение копирования по изменению буфера обмена — без ложных срабатываний
+- Локализация на 10 языков (Русский, English, Українська, Deutsch, Français, Español, 日本語, 한국어, 简体中文, 繁體中文)
+  с автоматическим выбором языка системы и ручным переключением в меню трея
+- Три варианта оформления плашки: системный, акцентный, контрастный
+- Три варианта длительности анимации и три позиции на экране
+- Живое обновление цветов при смене темы или акцента Windows
+- Журнал событий в `%LOCALAPPDATA%\CopyPush\CopyPush.log`
+- Автозапуск (включён по умолчанию) и запись в «Параметры → Приложения» с деинсталлятором
+- Сборка и публикация по тегу через GitHub Actions
+
+#### Технические решения
+
+- Низкоуровневый хук `WH_KEYBOARD_LL` только на чтение — `Ctrl+C` не подавляется
+- Подтверждение копирования через `WM_CLIPBOARDUPDATE` и `GetClipboardSequenceNumber`
+- Окно-уведомление на WPF с `AllowsTransparency` (layered window, попиксельная альфа)
+- Акцентный цвет берётся из `Explorer\Accent\AccentPalette` и WinRT `UISettings` —
+  реестровый `DWM\AccentColor` может хранить устаревшее значение
+- Единый `.exe` в single-file: self-contained (68 МБ) и framework-dependent (24 МБ)
 
 [1.0.0]: https://github.com/UniqueGanich/CopyPush/releases/tag/v1.0.0
