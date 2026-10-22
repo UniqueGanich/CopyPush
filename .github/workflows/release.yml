@@ -64,11 +64,13 @@ jobs:
           files: |
             release/*.zip
 
-      - name: Исходники релиза
+      - name: Артефакты сборки
         uses: actions/upload-artifact@v4
         with:
-          name: CopyPush-source-${{ steps.ver.outputs.version }}
+          name: CopyPush-build-${{ steps.ver.outputs.version }}
           path: |
-            dist/
             release/
+          # Хранить 14 дней: сами архивы уже лежат в релизе, исходники -
+          # в репозитории и в авто-архиве GitHub по тегу.
+          retention-days: 14
           if-no-files-found: error

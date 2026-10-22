@@ -47,4 +47,6 @@ jobs:
         with:
           name: CopyPush-win-x64
           path: out/CopyPush.exe
+          # Артефакты нужны только для проверки сборки, долго их хранить незачем.
+          retention-days: 14
           if-no-files-found: error
