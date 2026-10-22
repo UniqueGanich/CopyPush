@@ -194,7 +194,8 @@ Remove-Item $Out -Recurse -Force -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force -Path $Out | Out-Null
 
 function Pack([string]$srcDir, [string]$stageName, [string]$zipName) {
-    $stage = Join-Path $Out $stageName
+    # Внутри архива файлы лежат в одноимённой папке: CopyPush-1.1.0/CopyPush.exe
+    $stage = Join-Path $Out $zipName
     New-Item -ItemType Directory -Force -Path $stage | Out-Null
     Copy-Item (Join-Path $srcDir 'CopyPush.exe') $stage
     Copy-Item (Join-Path $ProjectDir 'build\Uninstall.cmd') $stage

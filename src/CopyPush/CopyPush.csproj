@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -17,9 +17,9 @@
     <NeutralLanguage>ru-RU</NeutralLanguage>
 
     <!-- Метаданные для страницы свойств файла и релиза -->
-    <Version>1.0.0</Version>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
+    <Version>1.1.0</Version>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
     <Product>CopyPush</Product>
     <Title>CopyPush — уведомление о копировании</Title>
     <Description>Системная привязка Ctrl+C: всплывающая плашка «Скопировано» у курсора мыши.</Description>
@@ -51,4 +51,10 @@
     <Using Remove="System.Drawing" />
   </ItemGroup>
 
+
+  <Target Name="RemoveUnusedFromBundle" AfterTargets="PrepareForBundle" BeforeTargets="GenerateSingleFileBundle">
+    <ItemGroup>
+      <FilesToBundle Remove="@(FilesToBundle)" Condition="'%(FilesToBundle.Filename)' == 'System.Windows.Forms.Design' or '%(FilesToBundle.Filename)' == 'Microsoft.DiaSymReader.Native.amd64' or '%(FilesToBundle.Filename)' == 'Microsoft.Windows.SDK.NET' or '%(FilesToBundle.Filename)' == 'WinRT.Runtime' or '%(FilesToBundle.Filename)' == 'System.Private.Xml' or '%(FilesToBundle.Filename)' == 'System.Xml.ReaderWriter' or '%(FilesToBundle.Filename)' == 'System.Data.Common' or '%(FilesToBundle.Filename)' == 'System.Net.Sockets' or '%(FilesToBundle.Filename)' == 'System.Net.Http'" />
+    </ItemGroup>
+  </Target>
 </Project>

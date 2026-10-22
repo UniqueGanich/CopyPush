@@ -1,4 +1,4 @@
-<div align="center">
+﻿<div align="center">
 
 <img src="docs/images/icon-256.png" alt="CopyPush" width="96" height="96">
 
@@ -59,8 +59,8 @@ Prebuilt binaries live in [Releases](https://github.com/UniqueGanich/CopyPush/re
 
 | What to download | Size | Requires |
 |---|---|---|
-| [**CopyPush-1.0.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0.zip) | 63.5 MB | nothing, works out of the box on Windows 10/11 |
-| [**CopyPush-1.0-small.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0-small.zip) | 6.4 MB | [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) |
+| [**CopyPush-1.1.0.zip](https://github.com/UniqueGanich/CopyPush/releases/download/v1.1.0/CopyPush-1.1.0.zip) | 50.4 MB | nothing, works out of the box on Windows 10/11 |
+| [**CopyPush-1.1.0-small.zip](https://github.com/UniqueGanich/CopyPush/releases/download/v1.1.0/CopyPush-1.1.0-small.zip) | 0.1 MB | [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) |
 
 1. Download the archive and unpack it anywhere (e.g. `C:\Tools\CopyPush`).
 2. Run `CopyPush.exe` — an icon appears in the tray.
