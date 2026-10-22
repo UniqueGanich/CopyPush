@@ -330,7 +330,7 @@ internal static class Loc
         {
             var culture = CultureInfo.CurrentUICulture;
 
-            // 1. Точное совпадение полного тега, напр. "zh-Hans" или "ja-JP".
+            // 1. Точное совпадение полного тега, напр. "zh-Hans" или "zh-Hant".
             if (Catalog.ContainsKey(culture.Name))
             {
                 return culture.Name;
