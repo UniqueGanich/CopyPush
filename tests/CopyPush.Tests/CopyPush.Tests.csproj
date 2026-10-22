@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Тесты без внешних зависимостей: обычное консольное приложение,
+    которое возвращает ненулевой код при ошибке. Запускается в CI.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>CopyPush.Tests</RootNamespace>
+    <AssemblyName>CopyPush.Tests</AssemblyName>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Файл локализации подключаем исходником: класс internal, но логике
+         не нужна сборка приложения целиком. -->
+    <Compile Include="..\..\src\CopyPush\Services\Localization.cs" Link="Localization.cs" />
+  </ItemGroup>
+
+</Project>

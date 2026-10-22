@@ -35,8 +35,10 @@ jobs:
           dotnet publish src/CopyPush/CopyPush.csproj --configuration Release -r win-x64 --self-contained false
           -p:PublishSingleFile=true --output out
 
-      - name: Проверка таблицы локализации
-        run: powershell -ExecutionPolicy Bypass -File build/verify-locales.ps1
+      - name: Тесты локализации
+        run: dotnet run --project tests/CopyPush.Tests/CopyPush.Tests.csproj --configuration Release
+      - name: Проверка целостности проекта
+        run: powershell -ExecutionPolicy Bypass -File build/verify-project.ps1
       - name: Иконка
         run: powershell -ExecutionPolicy Bypass -File build/make-icon.ps1
 

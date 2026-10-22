@@ -10,7 +10,7 @@ pops up right at your mouse cursor.**
 [![Release](https://img.shields.io/github/v/release/UniqueGanich/CopyPush?label=Release&color=blue)](https://github.com/UniqueGanich/CopyPush/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4?logo=windows)](https://microsoft.com/windows)
-[![Languages](https://img.shields.io/badge/languages-ru%20%7C%20en%20%7C%20uk%20%7C%20de%20%7C%20fr%20%7C%20es-0078D4)](src/CopyPush/Services/Loc.cs)
+[![Languages](https://img.shields.io/badge/languages-ru%20%7C%20en%20%7C%20uk%20%7C%20de%20%7C%20fr%20%7C%20es%20%7C%20ja%20%7C%20ko%20%7C%20zh-0078D4)](src/CopyPush/Services/Loc.cs)
 
 [Русский](README.md)
 
@@ -33,8 +33,8 @@ with a single toast right at your cursor.
   still interrupts a process in the terminal and still acts as a game key.
 - **No false positives.** The toast appears only if the clipboard actually changed
   after the keypress.
-- **Finds its own language.** The interface and the «Copied» label follow the Windows
-  language (русский / english / українська / deutsch / français / español). Any of them
+- **Finds its own language.** the interface and the «Copied» label follow the Windows
+  language (русский / english / українська / deutsch / français / español / 日本語 / 한국어 / 简体中文 / 繁體中文). Any of them
   can be pinned manually from the tray menu.
 - **Follows the system theme.** The surface matches system windows, the text is
   contrasting. The accent colour is read from the Windows theme and picked up live.
@@ -75,7 +75,7 @@ Everything lives in the tray icon menu:
 | Position | at cursor / screen center / bottom right |
 | Style | system / accent / contrast |
 | Duration | fast / normal / slow |
-| **Language** | automatic (system) / русский / english / українська / deutsch / français / español |
+| **Language** | automatic (system) / русский / english / українська / deutsch / français / español / 日本語 / 한국어 / 简体中文 / 繁體中文 |
 | Run at startup | on / off |
 
 ### The three styles

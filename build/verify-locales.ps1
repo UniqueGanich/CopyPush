@@ -7,14 +7,14 @@ param(
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $ErrorActionPreference = 'Stop'
 
-$locFile = Join-Path $ProjectDir 'src\CopyPush\Services\Loc.cs'
+$locFile = Join-Path $ProjectDir 'src\CopyPush\Services\Localization.cs'
 $text = [System.IO.File]::ReadAllText($locFile, [System.Text.Encoding]::UTF8)
 
 $langs = @{}
 $current = $null
 foreach ($line in ($text -split "`r?`n")) {
-    if ($line -match '^\s*\["([a-z]{2})"\]\s*=\s*new\(\)') { $current = $Matches[1]; $langs[$current] = @{} ; continue }
-    if ($line -match '^\s*\["([a-z]{2})"\]\s*=\s*new$') { $current = $Matches[1]; $langs[$current] = @{} ; continue }
+    if ($line -match '^\s*\["([a-z]{2}(?:-[A-Za-z]{2,4})?)"\]\s*=\s*new\(\)') { $current = $Matches[1]; $langs[$current] = @{} ; continue }
+    if ($line -match '^\s*\["([a-z]{2}(?:-[A-Za-z]{2,4})?)"\]\s*=\s*new$') { $current = $Matches[1]; $langs[$current] = @{} ; continue }
     if ($line -match '^\s*\["([^"]+)"\]\s*=\s*"((?:[^"\\]|\\.)*)"') {
         if ($current) { $langs[$current][$Matches[1]] = $Matches[2] }
     }

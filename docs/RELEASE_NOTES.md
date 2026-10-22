@@ -26,7 +26,10 @@ Run `Uninstall.cmd` from the same folder.
 - Глобальная привязка `Ctrl+C` — работает в любом приложении
 - `Ctrl+C` не перехватывается: хук работает только на чтение
 - Никаких ложных срабатываний: плашка появляется, только если буфер реально изменился
-- **Язык подстраивается сам** — русский, english, українська, deutsch, français, español
+- **Язык подстраивается сам** — 10 языков: русский, english, українська, deutsch, français, español, 日本語, 한국어, 简体中文, 繁體中文.
+  Если языка системы нет — автоматически включается английский. Любой язык можно зафиксировать вручную:
+  меню иконки в трее → **Language** (этот пункт всегда подписан по-английски, чтобы его можно было найти,
+  даже если интерфейс оказался на незнакомом языке).
 - Три варианта оформления: системный, акцентный, контрастный
 - Цвета системной темы, акцент подхватывается на лету
 - Окно не перехватывает клики, не активируется, не светится в `Alt+Tab`
@@ -50,7 +53,10 @@ pops up right at your mouse cursor — it rises smoothly and fades out.
 - **Global `Ctrl+C` binding** — works in every application
 - **Breaks nothing** — `Ctrl+C` is never swallowed, the hook is read-only
 - **No false positives** — the toast appears only if the clipboard really changed
-- **Finds its own language** — русский, english, українська, deutsch, français, español
+- **Finds its own language** — 10 languages: русский, english, українська, deutsch, français, español, 日本語, 한국어, 简体中文, 繁體中文.
+  If the system language is not supported, English is used automatically. Any language can be pinned manually:
+  tray icon menu → **Language** (this item is always labelled in English so it can be found
+  even if the interface ended up in an unfamiliar language).
 - Three styles: system, accent, contrast
 - Follows the system theme, accent colour picked up live
 - The window never steals clicks, never activates, never shows in `Alt+Tab`

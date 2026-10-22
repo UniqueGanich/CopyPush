@@ -46,7 +46,6 @@ internal sealed class AppContext : IDisposable
     private readonly CopyDetector _copyDetector;
     private readonly ToastService _toastService;
     private readonly TrayIcon _trayIcon;
-    private readonly DispatcherTimer _clipboardPoll;
     private readonly DispatcherTimer _themeTimer;
 
     public AppContext()
@@ -97,16 +96,6 @@ internal sealed class AppContext : IDisposable
         };
         _themeTimer.Tick += (_, _) => _theme.ReloadIfChanged();
         _themeTimer.Start();
-
-        // Страховка: если WM_CLIPBOARDUPDATE по какой-то причине не придёт
-        // (редко, но бывает при смене пользователя / разблокировке экрана),
-        // отслеживаем номер последовательности буфера раз в 700 мс.
-        _clipboardPoll = new DispatcherTimer(DispatcherPriority.Background)
-        {
-            Interval = TimeSpan.FromMilliseconds(700),
-        };
-        _clipboardPoll.Tick += (_, _) => { };
-        _clipboardPoll.Start();
     }
 
     private void OnCopied()
@@ -133,7 +122,6 @@ internal sealed class AppContext : IDisposable
 
     public void Dispose()
     {
-        _clipboardPoll.Stop();
         _themeTimer.Stop();
         _keyboardHook.Dispose();
         _copyDetector.Dispose();

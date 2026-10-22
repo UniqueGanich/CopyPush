@@ -10,7 +10,7 @@
 [![Release](https://img.shields.io/github/v/release/UniqueGanich/CopyPush?label=Release&color=blue)](https://github.com/UniqueGanich/CopyPush/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4?logo=windows)](https://microsoft.com/windows)
-[![Languages](https://img.shields.io/badge/languages-ru%20%7C%20en%20%7C%20uk%20%7C%20de%20%7C%20fr%20%7C%20es-0078D4)](src/CopyPush/Services/Loc.cs)
+[![Languages](https://img.shields.io/badge/languages-ru%20%7C%20en%20%7C%20uk%20%7C%20de%20%7C%20fr%20%7C%20es%20%7C%20ja%20%7C%20ko%20%7C%20zh-0078D4)](src/CopyPush/Services/Loc.cs)
 
 [English](README.en.md)
 
@@ -33,8 +33,8 @@
   В консоли он по-прежнему прерывает процесс, в играх работает как игровая клавиша.
 - **Без ложных срабатываний.** Плашка появляется, только если содержимое буфера
   действительно изменилось после нажатия.
-- **Язык подстраивается сам.** Интерфейс и надпись «Скопировано» берут язык системы
-  (русский / english / українська / deutsch / français / español). Язык можно
+- **Язык подстраивается сам.** интерфейс и надпись «Скопировано» берут язык системы
+  (русский / english / українська / deutsch / français / español / 日本語 / 한국어 / 简体中文 / 繁體中文). Язык можно
   зафиксировать вручную в меню в трее.
 - **Цвет системной темы.** Фон — как у системных окон, текст контрастный.
   Акцентный цвет берётся из темы Windows и подхватывается на лету.
@@ -73,7 +73,7 @@
 | Позиция | у курсора / по центру экрана / в правом нижнем углу |
 | Оформление | системный / акцентный / контрастный |
 | Длительность | быстро / обычно / медленно |
-| **Язык** | автоматически (системный) / русский / english / українська / deutsch / français / español |
+| **Язык** | автоматически (системный) / русский / english / українська / deutsch / français / español / 日本語 / 한국어 / 简体中文 / 繁體中文 |
 | Запускать вместе с Windows | вкл / выкл |
 
 ### Три варианта оформления

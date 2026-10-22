@@ -1,7 +1,9 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using CopyPush.Services;
+
 namespace CopyPush.Services;
 
 /// <summary>
@@ -16,8 +18,14 @@ internal sealed class TrayIcon : IDisposable
     private readonly Action _onTest;
     private readonly Action _onExit;
 
-    private Bitmap? _bitmap;
     private Icon? _icon;
+
+    /// <summary>Общий системный ресурс - освобождать его нельзя.</summary>
+    private static readonly Icon FallbackIcon = SystemIcons.Application;
+
+    [DllImport("user32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool DestroyIcon(IntPtr hIcon);
 
     public TrayIcon(SettingsService settings, ThemeService theme, Action onTest, Action onExit)
     {
@@ -56,26 +64,29 @@ internal sealed class TrayIcon : IDisposable
     private void RefreshIcon()
     {
         var newIcon = BuildIcon();
-        _notifyIcon.Icon = newIcon;
+        var old = _icon;
 
-        if (_icon is not null) _icon.Dispose();
+        _notifyIcon.Icon = newIcon;
         _icon = newIcon;
 
-        if (_bitmap is not null) _bitmap.Dispose();
-        _bitmap = null;
+        // Старую иконку освобождаем только после подмены, и только если она наша:
+        // SystemIcons.Application - общий ресурс GDI, его Dispose недопустим.
+        if (old is not null && !ReferenceEquals(old, FallbackIcon))
+        {
+            old.Dispose();
+        }
     }
 
     private Icon BuildIcon()
     {
+        Bitmap? bmp = null;
         try
         {
-            var bmp = new Bitmap(32, 32);
+            bmp = new Bitmap(32, 32);
             using (var g = Graphics.FromImage(bmp))
             {
                 g.SmoothingMode = SmoothingMode.AntiAlias;
                 g.Clear(Color.Transparent);
-
-                var (surface, foreground, _) = _theme.Resolve(ToastStyle.System);
 
                 // Иконка в трее: акцентный круг с белой галочкой - заметна
                 // и на светлой, и на тёмной панели задач.
@@ -95,13 +106,26 @@ internal sealed class TrayIcon : IDisposable
                 }
             }
 
-            _bitmap = bmp;
-            _icon = Icon.FromHandle(bmp.GetHicon());
-            return _icon;
+            // GetHicon() создаёт НОВЫЙ HICON, владельцем которого мы становимся.
+            // Clone() даёт независимую копию Icon, после чего исходный HICON
+            // можно уничтожить - иначе он утекает в GDI при каждой смене темы.
+            var hIcon = bmp.GetHicon();
+            try
+            {
+                return (Icon)Icon.FromHandle(hIcon).Clone();
+            }
+            finally
+            {
+                DestroyIcon(hIcon);
+            }
         }
         catch
         {
-            return SystemIcons.Application;
+            return FallbackIcon;
+        }
+        finally
+        {
+            bmp?.Dispose();
         }
     }
 
@@ -159,8 +183,10 @@ internal sealed class TrayIcon : IDisposable
         duration.DropDownItems.Add(Radio(Loc.Get("menu.duration.slow"), ToastDuration.Slow));
         menu.Items.Add(duration);
 
-        var language = new ToolStripMenuItem(Loc.Get("menu.language"));
-        language.DropDownItems.Add(LanguageItem(Loc.Get("menu.language.auto"), Loc.Auto));
+        // Пункт выбора языка всегда подписан по-английски: если интерфейс оказался
+        // на незнакомом языке, способ выйти из него должен быть находим.
+        var language = new ToolStripMenuItem("Language");
+        language.DropDownItems.Add(LanguageItem("Automatic (system)", Loc.Auto));
         foreach (var code in Loc.Supported)
         {
             language.DropDownItems.Add(LanguageItem(Loc.LanguageName(code), code));
@@ -260,7 +286,12 @@ internal sealed class TrayIcon : IDisposable
     {
         _notifyIcon.Visible = false;
         _notifyIcon.Dispose();
-        _icon?.Dispose();
-        _bitmap?.Dispose();
+
+        if (_icon is not null && !ReferenceEquals(_icon, FallbackIcon))
+        {
+            _icon.Dispose();
+        }
+
+        _icon = null;
     }
 }
