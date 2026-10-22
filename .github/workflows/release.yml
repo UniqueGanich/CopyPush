@@ -33,7 +33,12 @@ jobs:
         run: |
           $tag = if ("${{ github.event.inputs.tag }}") { "${{ github.event.inputs.tag }}" } else { "${{ github.ref_name }}" }
           $v = $tag -replace '^v', ''
+          # Имя архива: major.minor, а patch добавляется, только если он ненулевой.
+          # Для тега v1.0.0 получаются CopyPush-1.0.zip и CopyPush-1.0-small.zip.
+          $parts = $v -split '\.'
+          $short = if ($parts.Count -ge 3 -and $parts[2] -eq '0') { "$($parts[0]).$($parts[1])" } else { $v }
           "version=$v" >> $env:GITHUB_OUTPUT
+          "short=$short" >> $env:GITHUB_OUTPUT
           "tag=$tag" >> $env:GITHUB_OUTPUT
 
       - name: Иконка
@@ -43,7 +48,7 @@ jobs:
         shell: pwsh
         run: |
           $v = "${{ steps.ver.outputs.version }}"
-          ./build/pack-release.ps1 -Version $v
+          ./build/pack-release.ps1 -Version $v -ArchiveName "${{ steps.ver.outputs.short }}"
           Get-ChildItem release -Filter *.zip | ForEach-Object { "{0}  {1:N1} МБ" -f $_.Name, ($_.Length/1MB) }
 
       - name: Опубликовать релиз

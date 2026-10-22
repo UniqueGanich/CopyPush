@@ -1,11 +1,19 @@
 ﻿# Упаковка релизных артефактов. Используется и локально, и в CI (.github/workflows/release.yml).
 #   powershell -ExecutionPolicy Bypass -File build\pack-release.ps1 -Version 1.0.0
+#
+# Имена архивов: CopyPush-<ArchiveName>.zip (всё внутри) и
+# CopyPush-<ArchiveName>-small.zip (нужен .NET 8 Runtime).
+# ArchiveName по умолчанию равен версии; в CI для тега v1.0.0 туда
+# подставляется короткая версия 1.0, чтобы ссылки в README были короткими.
 param(
     [string]$Version = '1.0.0',
+    [string]$ArchiveName = '',
     [string]$ProjectDir = (Split-Path -Parent $PSScriptRoot)
 )
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $ErrorActionPreference = 'Stop'
+
+if ([string]::IsNullOrWhiteSpace($ArchiveName)) { $ArchiveName = $Version }
 
 $env:DOTNET_CLI_TELEMETRY_OPTOUT = '1'
 $env:Path = [Environment]::GetEnvironmentVariable('Path','Machine') + ';' + [Environment]::GetEnvironmentVariable('Path','User')
@@ -31,8 +39,8 @@ Write-Host "=== Упаковка ===" -ForegroundColor Cyan
 Remove-Item $Out -Recurse -Force -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force -Path $Out | Out-Null
 
-function Pack([string]$srcDir, [string]$name) {
-    $stage = Join-Path $Out $name
+function Pack([string]$srcDir, [string]$stageName, [string]$zipName) {
+    $stage = Join-Path $Out $stageName
     New-Item -ItemType Directory -Force -Path $stage | Out-Null
     Copy-Item (Join-Path $srcDir 'CopyPush.exe') $stage
     Copy-Item (Join-Path $ProjectDir 'build\Uninstall.cmd') $stage
@@ -51,12 +59,14 @@ function Pack([string]$srcDir, [string]$name) {
     $en = $en.Replace('[Русский](README.ru.md)', '[Русский](README.md)')
     [System.IO.File]::WriteAllText((Join-Path $stage 'README.en.md'), $en, (New-Object System.Text.UTF8Encoding($false)))
 
-    Compress-Archive -Path (Join-Path $stage '*') -DestinationPath (Join-Path $Out "$name.zip") -CompressionLevel Optimal
+    Compress-Archive -Path (Join-Path $stage '*') -DestinationPath (Join-Path $Out "$zipName.zip") -CompressionLevel Optimal
     Remove-Item $stage -Recurse -Force
 }
 
-Pack (Join-Path $Dist 'self-contained')     "CopyPush-$Version-win-x64"
-Pack (Join-Path $Dist 'framework-dependent') "CopyPush-$Version-win-x64-small"
+# Полный архив: .NET внутри, работает сразу.
+Pack (Join-Path $Dist 'self-contained')      'staging-self-contained'      "CopyPush-$ArchiveName"
+# Облегчённый архив: нужен .NET 8 Desktop Runtime.
+Pack (Join-Path $Dist 'framework-dependent') 'staging-framework-dependent' "CopyPush-$ArchiveName-small"
 
 Get-ChildItem $Out -Filter *.zip | ForEach-Object {
     "{0,-42} {1,7:N1} МБ" -f $_.Name, ($_.Length / 1MB)

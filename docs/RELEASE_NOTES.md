@@ -21,8 +21,8 @@
 
 | What to download | Size | Requires |
 |---|---|---|
-| [**CopyPush-1.0.0-win-x64.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0.0-win-x64.zip) | 63.5 MB | nothing, works out of the box |
-| [**CopyPush-1.0.0-win-x64-small.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0.0-win-x64-small.zip) | 6.4 MB | [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) |
+| [**CopyPush-1.0.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0.zip) | 63.5 MB | nothing, works out of the box |
+| [**CopyPush-1.0-small.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0-small.zip) | 6.4 MB | [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) |
 
 **Install:** unpack the archive anywhere and run `CopyPush.exe` — an icon appears in the tray, that's it.
 **Uninstall:** run `Uninstall.cmd` from the same folder.
@@ -65,8 +65,8 @@
 
 | Что скачать | Размер | Требования |
 |---|---|---|
-| [**CopyPush-1.0.0-win-x64.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0.0-win-x64.zip) | 63.5 МБ | ничего, работает сразу |
-| [**CopyPush-1.0.0-win-x64-small.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0.0-win-x64-small.zip) | 6.4 МБ | [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) |
+| [**CopyPush-1.0.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0.zip) | 63.5 МБ | ничего, работает сразу |
+| [**CopyPush-1.0-small.zip**](https://github.com/UniqueGanich/CopyPush/releases/download/v1.0.0/CopyPush-1.0-small.zip) | 6.4 МБ | [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) |
 
 **Установка:** распакуйте архив в любую папку и запустите `CopyPush.exe` — появится иконка в трее, и всё готово.
 **Удаление:** запустите `Uninstall.cmd` из той же папки.
