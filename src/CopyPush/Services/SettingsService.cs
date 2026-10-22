@@ -21,7 +21,7 @@ internal sealed class SettingsService
 
     /// <summary>
     /// Язык интерфейса. Пустая строка - определять автоматически по системе
-    /// (Loc.Auto). Иначе код языка: ru, en, uk, de, fr, es.
+    /// (Loc.Auto). Иначе код языка: ru, en, uk, de, fr, es, ja, ko, zh-Hans, zh-Hant.
     /// </summary>
     public string Language { get; set; } = Loc.Auto;
 
