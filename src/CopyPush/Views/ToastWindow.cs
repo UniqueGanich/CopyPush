@@ -256,11 +256,14 @@ internal sealed class ToastWindow : Window
 
     private void StartAnimation()
     {
+        // Общая длительность - как в прежней версии (700 / 1100 / 1500 мс).
+        // Затухание начинается ближе к концу, чтобы текст успевал прочитать
+        // целиком, а не таял сразу.
         var (totalMs, fadeOutStartMs) = _duration switch
         {
-            ToastDuration.Fast => (700, 300),
-            ToastDuration.Slow => (1500, 700),
-            _ => (1100, 495),
+            ToastDuration.Fast => (700, 520),
+            ToastDuration.Slow => (1500, 1000),
+            _ => (1100, 720),
         };
 
         var scale = new ScaleTransform(0.88, 0.88);
@@ -309,7 +312,6 @@ internal sealed class ToastWindow : Window
         Storyboard.SetTarget(fadeOut, _host);
         Storyboard.SetTargetProperty(fadeOut, new PropertyPath(UIElement.OpacityProperty));
         storyboard.Children.Add(fadeOut);
-
         storyboard.Completed += (_, _) =>
         {
             // Окно не закрываем, а прячем: оно переиспользуется при следующем

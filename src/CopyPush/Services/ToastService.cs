@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Threading;
 using CopyPush.Interop;
 using CopyPush.Views;
 
@@ -103,39 +104,38 @@ internal sealed class ToastService
     /// </summary>
     public void WarmUp()
     {
+        DispatcherTimer? timer = null;
+        ToastWindow? window = null;
+
         try
         {
-            // Прогреваем одно из пуловых окон и оставляем его в пуле.
-            var window = new ToastWindow(_theme, _settings.Style, _settings.Duration);
-            _pool.Add(window);
-
+            // Прогреваем отдельное окно: создаём, показываем за пределами экрана,
+            // затем закрываем. В пул оно НЕ попадает: таймер прогрева одноразовый,
+            // иначе он скрывал бы уже показанную плашку.
+            window = new ToastWindow(_theme, _settings.Style, _settings.Duration);
             window.Left = -32000;
             window.Top = -32000;
             window.Opacity = 0;
             window.Show();
 
-            var timer = new System.Windows.Threading.DispatcherTimer(
+            var warmupTimer = new DispatcherTimer(
                 TimeSpan.FromMilliseconds(150),
-                System.Windows.Threading.DispatcherPriority.Background,
+                DispatcherPriority.Background,
                 (_, _) =>
                 {
-                    try
-                    {
-                        window.Visibility = Visibility.Hidden;
-                        window.Opacity = 1;
-                    }
-                    catch
-                    {
-                        // игнорируем
-                    }
+                    // DispatcherTimer повторяется - обязательно останавливаем.
+                    timer?.Stop();
+                    try { window?.Close(); } catch { /* уже закрыто */ }
                 },
-                System.Windows.Threading.Dispatcher.CurrentDispatcher);
+                Dispatcher.CurrentDispatcher);
 
-            timer.Start();
+            timer = warmupTimer;
+            warmupTimer.Start();
         }
         catch (Exception ex)
         {
             // прогрев не критичен, но причина полезна в журнале
+            timer?.Stop();
             Logger.Error("Toast warm-up failed", ex);
         }
     }
