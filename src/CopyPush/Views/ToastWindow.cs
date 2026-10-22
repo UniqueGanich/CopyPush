@@ -40,6 +40,7 @@ internal sealed class ToastWindow : Window
     private ToastDuration _duration;
     private double _contentHeight;
     private Storyboard? _storyboard;
+    private bool _everShown;
 
     private Color _foreground = Colors.White;
 
@@ -219,7 +220,17 @@ internal sealed class ToastWindow : Window
         Left = left;
         Top = top;
 
-        Show();
+        // Первое показание создаёт HWND; при повторном использовании окно просто
+        // показывается заново, без пересоздания и без задержки на первом кадре.
+        if (!_everShown)
+        {
+            Show();
+            _everShown = true;
+        }
+        else
+        {
+            Visibility = Visibility.Visible;
+        }
 
         // После показа размер известен точно - уточняем позицию.
         double actualW = ActualWidth > 0 ? ActualWidth : desired.Width;
