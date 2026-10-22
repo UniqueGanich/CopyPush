@@ -22,6 +22,160 @@ $Dist   = Join-Path $ProjectDir 'dist'
 $Out    = Join-Path $ProjectDir 'release'
 $Proj   = Join-Path $ProjectDir 'src\CopyPush\CopyPush.csproj'
 
+# ---------------------------------------------------------------------------
+# Markdown -> обычный текст.
+# В архиве README кладёмся без разметки: блокнот Windows её не рисует.
+# В репозитории README остаётся в markdown.
+#
+# Разметка снимается по абзацам, а не по строкам: `**` и обратные кавычки
+# могут быть разорваны переносом строки, и по одной строке их не убрать.
+# ---------------------------------------------------------------------------
+
+function Convert-InlineToText([string]$s) {
+    if ([string]::IsNullOrWhiteSpace($s)) { return '' }
+    $t = $s
+
+    # Картинка: ![alt](url) -> [alt]
+    $t = [regex]::Replace($t, '!\[([^\]]*)\]\(([^)]*)\)', {
+        param($m)
+        if ([string]::IsNullOrWhiteSpace($m.Groups[1].Value)) { '' } else { '[' + $m.Groups[1].Value + ']' }
+    })
+
+    # Ссылка: [текст](url) -> текст (url)
+    $t = [regex]::Replace($t, '\[([^\]]*)\]\(([^)]*)\)', {
+        param($m)
+        $text = $m.Groups[1].Value
+        $url  = $m.Groups[2].Value
+        if ([string]::IsNullOrWhiteSpace($text)) { $url } else { $text + ' (' + $url + ')' }
+    })
+
+    # Выделения. (?s) - чтобы пара `**` или `` ` `` , разорванная переносом
+    # строки, тоже снималась.
+    $t = $t -replace '(?s)\*\*(.+?)\*\*', '$1'
+    $t = $t -replace '(?s)__(.+?)__', '$1'
+    $t = $t -replace '(?s)~~(.+?)~~', '$1'
+    $t = $t -replace '\*([^*\n]+)\*', '$1'
+    $t = $t -replace '(?s)`([^`]+)`', '$1'
+
+    # HTML-теги и сущности
+    $t = [regex]::Replace($t, '<[^>]+>', '')
+    $t = $t -replace '&nbsp;', ' '
+    $t = $t -replace '&lt;', '<'
+    $t = $t -replace '&gt;', '>'
+    $t = $t -replace '&quot;', '"'
+    $t = $t -replace '&amp;', '&'
+
+    return $t.Trim()
+}
+
+function Write-TableRows($rows, $out) {
+    foreach ($row in $rows) {
+        $cells = @($row)
+        if (-not ($cells | Where-Object { $_ -ne '' })) { continue }
+        $out.Add(($cells -join '  |  '))
+    }
+}
+
+# Печатает накопленный блок обычного текста, сняв разметку.
+function Flush-Block($block, $out) {
+    if ($block.Count -eq 0) { return }
+    $joined = $block -join "`n"
+    $block.Clear()
+    $text = Convert-InlineToText $joined
+    if ($text -eq '') { return }
+    foreach ($l in ($text -split "`n")) { $out.Add($l) }
+}
+
+function Convert-MarkdownToText([string]$md) {
+    $out = New-Object System.Collections.Generic.List[string]
+    $lines = $md -split "`r?`n"
+    $inCode = $false
+    $table = New-Object System.Collections.Generic.List[object]
+    $block = New-Object System.Collections.Generic.List[string]
+
+    foreach ($raw in $lines) {
+        $line = $raw
+
+        # Ограждение блока кода
+        if ($line -match '^\s*```') { Flush-Block $block $out; $inCode = -not $inCode; continue }
+        if ($inCode) { $out.Add($line); continue }
+
+        # Таблица
+        if ($line -match '^\s*\|') {
+            Flush-Block $block $out
+            if ($line -notmatch '^\s*\|[\s:\-\|]+\|\s*$') {
+                $cells = @()
+                foreach ($c in ($line.Trim().Trim('|') -split '\|')) { $cells += (Convert-InlineToText $c) }
+                $table.Add($cells)
+            }
+            continue
+        }
+        if ($table.Count -gt 0) {
+            if ($out.Count -gt 0 -and $out[$out.Count - 1] -ne '') { $out.Add('') }
+            Write-TableRows $table $out
+            $out.Add('')
+            $table.Clear()
+        }
+
+        # Горизонтальная линейка
+        if ($line -match '^\s*(-{3,}|\*{3,}|_{3,})\s*$') { Flush-Block $block $out; continue }
+
+        # Строка из одного HTML-тега
+        if ($line -match '^\s*</?[a-zA-Z][^>]*>\s*$') { Flush-Block $block $out; continue }
+
+        # Строка только из картинки или бейджа
+        if ($line -match '^\s*!\[[^\]]*\]\([^)]*\)\s*$') { Flush-Block $block $out; continue }
+        if ($line -match '^\s*\[!\[[^\]]*\]\([^)]*\)\]\([^)]*\)\s*$') { Flush-Block $block $out; continue }
+
+        # Пустая строка - конец абзаца
+        if ($line.Trim() -eq '') { Flush-Block $block $out; continue }
+
+        # Заголовок
+        if ($line -match '^\s*#{1,6}\s+(.*)$') {
+            Flush-Block $block $out
+            $out.Add('')
+            $out.Add((Convert-InlineToText $Matches[1]))
+            $out.Add('')
+            continue
+        }
+
+        # Цитата
+        if ($line -match '^\s*>\s?(.*)$') {
+            Flush-Block $block $out
+            $out.Add((Convert-InlineToText $Matches[1]))
+            continue
+        }
+
+        # Обычный текст - часть абзаца
+        $block.Add($line)
+    }
+
+    Flush-Block $block $out
+
+    if ($table.Count -gt 0) {
+        Write-TableRows $table $out
+        $table.Clear()
+    }
+
+    # Схлопываем пустые строки подряд и убираем хвостовые
+    $res = New-Object System.Collections.Generic.List[string]
+    $wasEmpty = $true
+    foreach ($l in $out) {
+        if ($l -eq '') {
+            if ($wasEmpty) { continue }
+            $wasEmpty = $true
+        } else { $wasEmpty = $false }
+        $res.Add($l)
+    }
+    while ($res.Count -gt 0 -and $res[$res.Count - 1] -eq '') { $res.RemoveAt($res.Count - 1) }
+
+    return ($res -join "`r`n")
+}
+
+# ---------------------------------------------------------------------------
+# Сборка
+# ---------------------------------------------------------------------------
+
 Write-Host "=== Сборка self-contained ===" -ForegroundColor Cyan
 Remove-Item (Join-Path $Dist 'self-contained') -Recurse -Force -ErrorAction SilentlyContinue
 dotnet publish $Proj -c Release -r win-x64 --self-contained true `
@@ -46,18 +200,16 @@ function Pack([string]$srcDir, [string]$stageName, [string]$zipName) {
     Copy-Item (Join-Path $ProjectDir 'build\Uninstall.cmd') $stage
     Copy-Item (Join-Path $ProjectDir 'LICENSE') $stage
 
-    # README в двух языках.
-    # В репозитории README.md - английский (его GitHub показывает всем, кроме
-    # русскоязычных, которым подставляет README.ru.md), а русский - README.ru.md.
-    # В архиве наоборот: русский становится README.md (аудитория утилиты
-    # русскоязычная), английский - README.en.md. Ссылки правим под эти имена.
-    $ru = [System.IO.File]::ReadAllText((Join-Path $ProjectDir 'README.ru.md'), [System.Text.Encoding]::UTF8)
-    $ru = $ru.Replace('[English](README.md)', '[English](README.en.md)')
-    [System.IO.File]::WriteAllText((Join-Path $stage 'README.md'), $ru, (New-Object System.Text.UTF8Encoding($false)))
-
-    $en = [System.IO.File]::ReadAllText((Join-Path $ProjectDir 'README.md'), [System.Text.Encoding]::UTF8)
-    $en = $en.Replace('[Русский](README.ru.md)', '[Русский](README.md)')
-    [System.IO.File]::WriteAllText((Join-Path $stage 'README.en.md'), $en, (New-Object System.Text.UTF8Encoding($false)))
+    # README в двух языках, как в репозитории: README.md (английский) и
+    # README.ru.md (русский). В архиве разметка убирается - блокнот её не рисует.
+    foreach ($pair in @(
+        @{ src = 'README.md';    dst = 'README.md' },
+        @{ src = 'README.ru.md'; dst = 'README.ru.md' }
+    )) {
+        $md = [System.IO.File]::ReadAllText((Join-Path $ProjectDir $pair.src), [System.Text.Encoding]::UTF8)
+        $text = Convert-MarkdownToText $md
+        [System.IO.File]::WriteAllText((Join-Path $stage $pair.dst), $text + "`r`n", (New-Object System.Text.UTF8Encoding($true)))
+    }
 
     Compress-Archive -Path (Join-Path $stage '*') -DestinationPath (Join-Path $Out "$zipName.zip") -CompressionLevel Optimal
     Remove-Item $stage -Recurse -Force

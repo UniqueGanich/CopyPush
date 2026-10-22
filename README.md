@@ -18,6 +18,13 @@ pops up right at your mouse cursor.**
 
 ---
 
+> **⚠️ WARNING:**
+>
+> The project was created entirely by an AI agent through OpenCode, because I found it
+> fairly convenient to have a copy notification, I do not promise 100% reliability or beautiful code.
+>
+> You can reach me through the ways listed in the account.
+
 ![Screenshot](docs/images/hero.png)
 
 ## Why
